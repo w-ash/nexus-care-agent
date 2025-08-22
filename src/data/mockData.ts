@@ -262,6 +262,16 @@ export const simulateTimeProgression = (days: number): void => {
   });
 };
 
+// Store initial state for reset
+const initialCampaignState = JSON.parse(JSON.stringify(mockCampaigns));
+
+export const resetDemoData = (): void => {
+  // Reset campaigns to initial state
+  mockCampaigns.length = 0;
+  mockCampaigns.push(...JSON.parse(JSON.stringify(initialCampaignState)));
+  console.log('Demo data reset to initial state');
+};
+
 export const getOverallMetrics = () => {
   const totalMembers = mockCampaigns.reduce((sum, campaign) => sum + campaign.activeMembers, 0);
   const avgClosureRate = mockCampaigns.reduce((sum, campaign) => sum + campaign.closureRate, 0) / mockCampaigns.length;

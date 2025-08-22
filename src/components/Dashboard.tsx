@@ -8,6 +8,7 @@ import {
   getMembersByGapCount, 
   simulateTimeProgression, 
   getOverallMetrics,
+  resetDemoData,
   type Campaign 
 } from '@/data/mockData';
 import { 
@@ -15,24 +16,29 @@ import {
   Users, 
   TrendingUp, 
   DollarSign, 
-  Plus, 
   AlertCircle,
-  BarChart3,
-  Zap
+  BarChart3
 } from 'lucide-react';
+import Header from '@/components/ui/header';
 
 interface DashboardProps {
   onCreateCampaign: () => void;
   onViewMember: (memberId: string) => void;
+  onNavigateHome: () => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember }) => {
+const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember, onNavigateHome }) => {
   const [campaigns, setCampaigns] = useState(mockCampaigns);
   const metrics = getOverallMetrics();
   const multiGapMembers = getMembersByGapCount(2);
 
   const handleSimulate = () => {
     simulateTimeProgression(3);
+    setCampaigns([...mockCampaigns]); // Trigger re-render
+  };
+
+  const handleReset = () => {
+    resetDemoData();
     setCampaigns([...mockCampaigns]); // Trigger re-render
   };
 
@@ -46,25 +52,15 @@ const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember })
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card px-6 py-4">
-        <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <div>
-            <h1 className="text-2xl font-bold text-gradient">Healthcare Campaign Manager</h1>
-            <p className="text-muted-foreground">AI-powered care gap closure platform</p>
-          </div>
-          <div className="flex gap-3">
-            <Button variant="outline" onClick={handleSimulate} className="gap-2">
-              <Zap className="w-4 h-4" />
-              Simulate 3 Days
-            </Button>
-            <Button onClick={onCreateCampaign} className="gap-2 bg-gradient-ai">
-              <Plus className="w-4 h-4" />
-              Create Campaign
-            </Button>
-          </div>
-        </div>
-      </header>
+      <Header 
+        onTitleClick={onNavigateHome}
+        onCreateCampaign={onCreateCampaign}
+        onSimulate={handleSimulate}
+        onReset={handleReset}
+        showCreateButton={true}
+        showSimulateButton={true}
+        showResetButton={true}
+      />
 
       <div className="max-w-7xl mx-auto p-6 space-y-6">
         {/* Key Metrics */}

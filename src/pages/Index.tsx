@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Dashboard from '@/components/Dashboard';
 import CampaignBuilder from '@/components/CampaignBuilder';
+import Header from '@/components/ui/header';
 
 const Index = () => {
   const [currentPage, setCurrentPage] = useState<'dashboard' | 'campaign-builder' | 'member-detail'>('dashboard');
@@ -26,6 +27,7 @@ const Index = () => {
       <Dashboard 
         onCreateCampaign={handleCreateCampaign}
         onViewMember={handleViewMember}
+        onNavigateHome={handleBackToDashboard}
       />
     );
   }
@@ -34,6 +36,7 @@ const Index = () => {
     return (
       <CampaignBuilder 
         onBack={handleBackToDashboard}
+        onNavigateHome={handleBackToDashboard}
         onSave={(campaign) => {
           // TODO: Save campaign to mock data
           console.log('Saving campaign:', campaign);
@@ -44,8 +47,14 @@ const Index = () => {
 
   // Placeholder for member detail page
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-background">
+      <Header 
+        onTitleClick={handleBackToDashboard}
+        showCreateButton={false}
+        showSimulateButton={false}
+        showResetButton={false}
+      />
+      <div className="max-w-4xl mx-auto p-6">
         <button 
           onClick={handleBackToDashboard}
           className="mb-4 text-primary hover:underline"

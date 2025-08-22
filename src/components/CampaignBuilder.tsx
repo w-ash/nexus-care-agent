@@ -23,7 +23,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Send, Plus, ArrowLeft } from 'lucide-react';
+import { Send, Plus } from 'lucide-react';
+import Header from '@/components/ui/header';
 import TriggerNode from './nodes/TriggerNode';
 import OutreachNode from './nodes/OutreachNode';
 import ActionNode from './nodes/ActionNode';
@@ -66,9 +67,10 @@ const initialEdges: Edge[] = [];
 interface CampaignBuilderProps {
   onBack: () => void;
   onSave?: (campaign: any) => void;
+  onNavigateHome: () => void;
 }
 
-const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => {
+const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNavigateHome }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
@@ -475,15 +477,16 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
 
   return (
     <div className="h-screen bg-background flex flex-col">
-      {/* Header */}
-      <div className="border-b bg-card px-6 py-4">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={onBack}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Dashboard
-          </Button>
-          <h1 className="text-2xl font-semibold">Campaign Builder</h1>
-        </div>
+      <Header 
+        onTitleClick={onNavigateHome}
+        showCreateButton={false}
+        showSimulateButton={false}
+        showResetButton={false}
+      />
+      <div className="border-b bg-card px-6 py-2">
+        <Button variant="ghost" size="sm" onClick={onBack} className="text-primary hover:text-primary/80">
+          ← Back to Dashboard
+        </Button>
       </div>
       {/* Main Content */}
       <div className="flex flex-1 overflow-hidden">
