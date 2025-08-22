@@ -624,11 +624,13 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
         <div className="w-96 border-l bg-card flex flex-col max-h-full">
           {/* Chat Interface */}
           <div className="flex-1 flex flex-col">
+            {/* Header */}
             <div className="p-4 border-b">
               <h3 className="font-medium">AI Assistant</h3>
               <p className="text-sm text-muted-foreground">Describe your campaign workflow</p>
             </div>
             
+            {/* Scrollable Chat Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {chatHistory.map((message, index) => (
                 <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -643,19 +645,22 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
               ))}
             </div>
 
-            <form onSubmit={handleChatSubmit} className="p-4 border-t">
-              <div className="flex gap-2">
-                <Input
-                  value={chatInput}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  placeholder="Describe your campaign..."
-                  className="flex-1"
-                />
-                <Button type="submit" size="icon">
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
-            </form>
+            {/* Footer with Input */}
+            <div className="p-4 border-t">
+              <form onSubmit={handleChatSubmit}>
+                <div className="flex gap-2">
+                  <Input
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    placeholder="Describe your campaign..."
+                    className="flex-1"
+                  />
+                  <Button type="submit" size="icon">
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
