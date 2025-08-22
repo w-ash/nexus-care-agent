@@ -60,6 +60,11 @@ const TriggerNode: React.FC<TriggerNodeProps> = ({ data, selected }) => {
         position={Position.Bottom}
         className="w-3 h-3 bg-emerald-500 border-2 border-background"
       />
+      <Handle
+        type="source"
+        position={Position.Right}
+        className="w-3 h-3 bg-emerald-500 border-2 border-background"
+      />
     </div>
   );
 };

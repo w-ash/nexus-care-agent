@@ -10,6 +10,7 @@ import {
   Edge,
   Connection,
   Position,
+  MarkerType,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Button } from '@/components/ui/button';
@@ -86,7 +87,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
   const [splitPercentage, setSplitPercentage] = useState([25]);
 
   const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
+    (params: Connection) => setEdges((eds) => addEdge({ ...params, markerEnd: { type: MarkerType.ArrowClosed } }, eds)),
     [setEdges]
   );
 
@@ -278,17 +279,17 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
       ];
 
       const workflowEdges = [
-        { id: 'e1', source: 'trigger_mammogram', target: 'age_check' },
-        { id: 'e2', source: 'age_check', target: 'sms_education', sourceHandle: 'true', label: '40-49' },
-        { id: 'e3', source: 'age_check', target: 'sms_schedule_older', sourceHandle: 'false', label: '50+' },
-        { id: 'e4', source: 'sms_education', target: 'wait_edu' },
-        { id: 'e5', source: 'wait_edu', target: 'sms_schedule_young' },
-        { id: 'e6', source: 'sms_schedule_young', target: 'wait_main' },
-        { id: 'e7', source: 'sms_schedule_older', target: 'wait_main' },
-        { id: 'e8', source: 'wait_main', target: 'phone_followup' },
-        { id: 'e9', source: 'phone_followup', target: 'response_check' },
-        { id: 'e10', source: 'response_check', target: 'end_success', sourceHandle: 'true', label: 'Responded' },
-        { id: 'e11', source: 'response_check', target: 'end_incomplete', sourceHandle: 'false', label: 'No Response' }
+        { id: 'e1', source: 'trigger_mammogram', target: 'age_check', markerEnd: { type: MarkerType.ArrowClosed } },
+        { id: 'e2', source: 'age_check', target: 'sms_education', sourceHandle: 'true', label: '40-49', markerEnd: { type: MarkerType.ArrowClosed } },
+        { id: 'e3', source: 'age_check', target: 'sms_schedule_older', sourceHandle: 'false', label: '50+', markerEnd: { type: MarkerType.ArrowClosed } },
+        { id: 'e4', source: 'sms_education', target: 'wait_edu', markerEnd: { type: MarkerType.ArrowClosed } },
+        { id: 'e5', source: 'wait_edu', target: 'sms_schedule_young', markerEnd: { type: MarkerType.ArrowClosed } },
+        { id: 'e6', source: 'sms_schedule_young', target: 'wait_main', markerEnd: { type: MarkerType.ArrowClosed } },
+        { id: 'e7', source: 'sms_schedule_older', target: 'wait_main', markerEnd: { type: MarkerType.ArrowClosed } },
+        { id: 'e8', source: 'wait_main', target: 'phone_followup', markerEnd: { type: MarkerType.ArrowClosed } },
+        { id: 'e9', source: 'phone_followup', target: 'response_check', markerEnd: { type: MarkerType.ArrowClosed } },
+        { id: 'e10', source: 'response_check', target: 'end_success', sourceHandle: 'true', label: 'Responded', markerEnd: { type: MarkerType.ArrowClosed } },
+        { id: 'e11', source: 'response_check', target: 'end_incomplete', sourceHandle: 'false', label: 'No Response', markerEnd: { type: MarkerType.ArrowClosed } }
       ];
 
       newNodes = workflowNodes;

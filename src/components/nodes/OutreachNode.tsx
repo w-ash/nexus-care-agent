@@ -56,6 +56,11 @@ const OutreachNode: React.FC<OutreachNodeProps> = ({ data, selected }) => {
         position={Position.Top}
         className="w-3 h-3 bg-primary border-2 border-background"
       />
+      <Handle
+        type="target"
+        position={Position.Left}
+        className="w-3 h-3 bg-primary border-2 border-background"
+      />
       
       <div className="flex items-center gap-2 mb-2">
         <div className={`w-6 h-6 rounded-full ${getChannelColor()} flex items-center justify-center`}>
@@ -83,6 +88,11 @@ const OutreachNode: React.FC<OutreachNodeProps> = ({ data, selected }) => {
       <Handle
         type="source"
         position={Position.Bottom}
+        className="w-3 h-3 bg-primary border-2 border-background"
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
         className="w-3 h-3 bg-primary border-2 border-background"
       />
     </div>
