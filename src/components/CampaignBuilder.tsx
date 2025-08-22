@@ -496,6 +496,8 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
             onNodeClick={onNodeClick}
             nodeTypes={nodeTypes}
             fitView
+            defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
+            fitViewOptions={{ padding: 0.1, maxZoom: 0.5 }}
             className="bg-muted/5"
           >
             <Background />
