@@ -83,7 +83,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember })
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white/80 text-sm">Gap Closure Rate</p>
-                <p className="text-2xl font-bold">{metrics.avgClosureRate}%</p>
+                <p className="text-2xl font-bold">{Number(metrics.avgClosureRate).toFixed(1).replace('.0', '')}%</p>
               </div>
               <TrendingUp className="w-8 h-8 text-white/60" />
             </div>
@@ -201,7 +201,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember })
                   
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Closure Rate</span>
-                    <span className="font-medium text-success">{campaign.closureRate}%</span>
+                    <span className="font-medium text-success">{Number(campaign.closureRate).toFixed(1).replace('.0', '')}%</span>
                   </div>
                   
                   <div className="flex justify-between text-sm">
@@ -218,7 +218,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember })
                       />
                     </div>
                     <p className="text-xs text-muted-foreground text-center">
-                      {campaign.closureRate}% closure rate
+                      {Number(campaign.closureRate).toFixed(1).replace('.0', '')}% closure rate
                     </p>
                   </div>
                 </div>
