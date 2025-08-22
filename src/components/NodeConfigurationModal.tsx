@@ -274,12 +274,7 @@ const NodeConfigurationModal: React.FC<NodeConfigurationModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle>Configure {getNodeTypeLabel(node.type)} Node</DialogTitle>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
+          <DialogTitle>Configure {getNodeTypeLabel(node.type)} Node</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-6 py-4">
