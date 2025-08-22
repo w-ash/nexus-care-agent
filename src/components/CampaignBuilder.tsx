@@ -76,14 +76,6 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
     { type: 'ai', message: 'Hi! I can help you create a campaign workflow. Try: "Create a mammogram screening campaign for women 40-74 who are overdue. For women 40-49, send educational SMS first, then scheduling help. For 50+, go straight to scheduling. Try SMS, wait 5 days, then phone call."' }
   ]);
 
-  // Update initial nodes with edit callback after component mounts
-  React.useEffect(() => {
-    setNodes(nodes => nodes.map(node => ({
-      ...node,
-      data: { ...node.data, onEdit: handleNodeEdit }
-    })));
-  }, []);
-
   // Campaign configuration state
   const [campaignName, setCampaignName] = useState('');
   const [priority, setPriority] = useState('Medium');
@@ -112,6 +104,14 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
       setIsModalOpen(true);
     }
   }, [nodes]);
+
+  // Update initial nodes with edit callback after component mounts
+  React.useEffect(() => {
+    setNodes(nodes => nodes.map(node => ({
+      ...node,
+      data: { ...node.data, onEdit: handleNodeEdit }
+    })));
+  }, [handleNodeEdit]);
 
   const updateNodeConfig = (nodeId: string, newConfig: any) => {
     setNodes(prev => prev.map(node => 
