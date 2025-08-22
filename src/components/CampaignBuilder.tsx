@@ -522,11 +522,11 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
                 className="absolute inset-0 z-10" 
                 onClick={() => setIsPaletteOpen(false)}
               />
-              <Card className="absolute bottom-20 right-4 w-80 shadow-lg border-muted/20 z-20 animate-scale-in">
-                <CardHeader className="pb-3 bg-gradient-to-r from-primary/5 to-primary/10">
+              <Card className="absolute bottom-20 right-4 w-80 max-h-[70vh] shadow-lg border-muted/20 z-20 animate-scale-in flex flex-col">
+                <CardHeader className="pb-3 bg-gradient-to-r from-primary/5 to-primary/10 flex-shrink-0">
                   <CardTitle className="text-sm font-medium">Add Node</CardTitle>
                 </CardHeader>
-                 <CardContent className="pt-3">
+                <CardContent className="pt-3 flex-1 overflow-y-auto min-h-0">
                    <div className="space-y-3">
                      {Object.entries(NODE_CATEGORIES).map(([category, nodes]) => (
                        <div key={category}>
