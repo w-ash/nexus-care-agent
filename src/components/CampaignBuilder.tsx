@@ -72,6 +72,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [chatInput, setChatInput] = useState('');
   const [chatHistory, setChatHistory] = useState<Array<{ type: 'user' | 'ai', message: string }>>([
     { type: 'ai', message: 'Hi! I can help you create a campaign workflow. Try: "Create a mammogram screening campaign for women 40-74 who are overdue. For women 40-49, send educational SMS first, then scheduling help. For 50+, go straight to scheduling. Try SMS, wait 5 days, then phone call."' }
@@ -509,64 +510,100 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
             <Controls />
           </ReactFlow>
 
-          {/* Node Palette */}
-          <Card className="absolute bottom-4 left-4 w-80 shadow-lg border-muted/20">
-            <CardHeader className="pb-3 bg-gradient-to-r from-primary/5 to-primary/10">
-              <CardTitle className="text-sm font-medium">Add Node</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-3">
-              <div className="grid grid-cols-2 gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addNodeFromPalette('outreach')}
-                  className="h-12 flex-col gap-1 text-xs hover:bg-blue-50 hover:border-blue-200 transition-colors"
-                >
-                  💬 Outreach
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addNodeFromPalette('decision')}
-                  className="h-12 flex-col gap-1 text-xs hover:bg-purple-50 hover:border-purple-200 transition-colors"
-                >
-                  🤔 Decision
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addNodeFromPalette('wait')}
-                  className="h-12 flex-col gap-1 text-xs hover:bg-amber-50 hover:border-amber-200 transition-colors"
-                >
-                  ⏰ Wait
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addNodeFromPalette('action')}
-                  className="h-12 flex-col gap-1 text-xs hover:bg-teal-50 hover:border-teal-200 transition-colors"
-                >
-                  📅 Action
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addNodeFromPalette('knowledge')}
-                  className="h-12 flex-col gap-1 text-xs hover:bg-pink-50 hover:border-pink-200 transition-colors"
-                >
-                  🧠 Knowledge
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addNodeFromPalette('end')}
-                  className="h-12 flex-col gap-1 text-xs hover:bg-gray-50 hover:border-gray-200 transition-colors"
-                >
-                  ✅ End
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Node Palette - Minimizable */}
+          {isPaletteOpen && (
+            <>
+              {/* Backdrop for click-away */}
+              <div 
+                className="absolute inset-0 z-10" 
+                onClick={() => setIsPaletteOpen(false)}
+              />
+              <Card className="absolute bottom-20 left-4 w-80 shadow-lg border-muted/20 z-20 animate-scale-in">
+                <CardHeader className="pb-3 bg-gradient-to-r from-primary/5 to-primary/10">
+                  <CardTitle className="text-sm font-medium">Add Node</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-3">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        addNodeFromPalette('outreach');
+                        setIsPaletteOpen(false);
+                      }}
+                      className="h-12 flex-col gap-1 text-xs hover:bg-blue-50 hover:border-blue-200 transition-colors"
+                    >
+                      💬 Outreach
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        addNodeFromPalette('decision');
+                        setIsPaletteOpen(false);
+                      }}
+                      className="h-12 flex-col gap-1 text-xs hover:bg-purple-50 hover:border-purple-200 transition-colors"
+                    >
+                      🤔 Decision
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        addNodeFromPalette('wait');
+                        setIsPaletteOpen(false);
+                      }}
+                      className="h-12 flex-col gap-1 text-xs hover:bg-amber-50 hover:border-amber-200 transition-colors"
+                    >
+                      ⏰ Wait
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        addNodeFromPalette('action');
+                        setIsPaletteOpen(false);
+                      }}
+                      className="h-12 flex-col gap-1 text-xs hover:bg-teal-50 hover:border-teal-200 transition-colors"
+                    >
+                      📅 Action
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        addNodeFromPalette('knowledge');
+                        setIsPaletteOpen(false);
+                      }}
+                      className="h-12 flex-col gap-1 text-xs hover:bg-pink-50 hover:border-pink-200 transition-colors"
+                    >
+                      🧠 Knowledge
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        addNodeFromPalette('end');
+                        setIsPaletteOpen(false);
+                      }}
+                      className="h-12 flex-col gap-1 text-xs hover:bg-gray-50 hover:border-gray-200 transition-colors"
+                    >
+                      ✅ End
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          )}
+
+          {/* Add Node Button */}
+          <Button
+            onClick={() => setIsPaletteOpen(!isPaletteOpen)}
+            className="absolute bottom-4 left-4 w-12 h-12 rounded-full shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground hover:scale-110 transition-all duration-200 z-30"
+            size="icon"
+          >
+            <Plus className={`w-6 h-6 transition-transform duration-200 ${isPaletteOpen ? 'rotate-45' : ''}`} />
+          </Button>
         </div>
 
         {/* Right Panel */}
