@@ -196,110 +196,116 @@ const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember, o
 
               return (
                 <Card key={campaign.id} className="p-6">
-                  <div className="flex items-center justify-between">
-                    {/* Left side - Campaign info and primary metrics */}
-                    <div className="flex-1">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div>
-                          <h3 className="font-semibold text-xl">{campaign.name}</h3>
-                          <div className="flex items-center gap-3 mt-1">
-                            <Badge variant={getPriorityBadgeVariant(campaign.priority)}>
-                              {campaign.priority}
-                            </Badge>
-                            <span className="text-sm text-muted-foreground">
-                              HEDIS Measure
-                            </span>
-                          </div>
+                  <div>
+                    {/* Header with campaign name and edit button */}
+                    <div className="flex items-start justify-between mb-4">
+                      <div>
+                        <h3 className="font-semibold text-xl">{campaign.name}</h3>
+                        <div className="flex items-center gap-3 mt-1">
+                          <Badge variant={getPriorityBadgeVariant(campaign.priority)}>
+                            {campaign.priority}
+                          </Badge>
+                          <span className="text-sm text-muted-foreground">
+                            HEDIS Measure
+                          </span>
                         </div>
                       </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onEditCampaign?.(campaign.id)}
+                        className="gap-2 shrink-0"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                        Edit Campaign
+                      </Button>
+                    </div>
 
-                      {/* Industry-standard metrics grid */}
-                      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-                        {/* Numerator/Denominator */}
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-1">
-                            <Target className="w-4 h-4 text-muted-foreground" />
-                            <p className="text-sm font-medium text-muted-foreground">Performance Rate</p>
-                          </div>
+                    {/* Industry-standard metrics grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                      {/* Numerator/Denominator */}
+                      <div className="space-y-1 min-h-[120px] flex flex-col">
+                        <div className="flex items-start gap-1 min-h-[40px]">
+                          <Target className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
+                          <p className="text-sm font-medium text-muted-foreground leading-tight">Performance Rate</p>
+                        </div>
+                        <div className="flex-1 flex flex-col justify-center">
                           <p className="text-2xl font-bold text-success">{performanceRate.toFixed(1)}%</p>
                           <p className="text-xs text-muted-foreground">
                             {numerator.toLocaleString()}/{eligiblePopulation.toLocaleString()} EPOP
                           </p>
                         </div>
+                      </div>
 
-                        {/* Gap Closure Rate */}
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-1">
-                            <TrendingUp className="w-4 h-4 text-muted-foreground" />
-                            <p className="text-sm font-medium text-muted-foreground">Gap Closure</p>
-                          </div>
+                      {/* Gap Closure Rate */}
+                      <div className="space-y-1 min-h-[120px] flex flex-col">
+                        <div className="flex items-start gap-1 min-h-[40px]">
+                          <TrendingUp className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
+                          <p className="text-sm font-medium text-muted-foreground leading-tight">Gap Closure</p>
+                        </div>
+                        <div className="flex-1 flex flex-col justify-center">
                           <p className="text-2xl font-bold">{Number(campaign.closureRate).toFixed(1)}%</p>
                           <p className="text-xs text-muted-foreground">
                             Target: 75-85%
                           </p>
                         </div>
+                      </div>
 
-                        {/* Time to Closure */}
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4 text-muted-foreground" />
-                            <p className="text-sm font-medium text-muted-foreground">Avg Time to Close</p>
-                          </div>
+                      {/* Time to Closure */}
+                      <div className="space-y-1 min-h-[120px] flex flex-col">
+                        <div className="flex items-start gap-1 min-h-[40px]">
+                          <Clock className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
+                          <p className="text-sm font-medium text-muted-foreground leading-tight">Avg Time to Close</p>
+                        </div>
+                        <div className="flex-1 flex flex-col justify-center">
                           <p className="text-2xl font-bold">{avgTimeToClose}d</p>
                           <p className="text-xs text-muted-foreground">
                             Target: 45-60d
                           </p>
                         </div>
+                      </div>
 
-                        {/* Member Engagement */}
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-1">
-                            <UserCheck className="w-4 h-4 text-muted-foreground" />
-                            <p className="text-sm font-medium text-muted-foreground">Engagement Rate</p>
-                          </div>
+                      {/* Member Engagement */}
+                      <div className="space-y-1 min-h-[120px] flex flex-col">
+                        <div className="flex items-start gap-1 min-h-[40px]">
+                          <UserCheck className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
+                          <p className="text-sm font-medium text-muted-foreground leading-tight">Engagement Rate</p>
+                        </div>
+                        <div className="flex-1 flex flex-col justify-center">
                           <p className="text-2xl font-bold">{engagementRate}%</p>
                           <p className="text-xs text-muted-foreground">
                             Target: 75%
                           </p>
                         </div>
+                      </div>
 
-                        {/* Cost per Gap */}
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-1">
-                            <DollarSign className="w-4 h-4 text-muted-foreground" />
-                            <p className="text-sm font-medium text-muted-foreground">Cost per Gap</p>
-                          </div>
+                      {/* Cost per Gap */}
+                      <div className="space-y-1 min-h-[120px] flex flex-col">
+                        <div className="flex items-start gap-1 min-h-[40px]">
+                          <DollarSign className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
+                          <p className="text-sm font-medium text-muted-foreground leading-tight">Cost per Gap</p>
+                        </div>
+                        <div className="flex-1 flex flex-col justify-center">
                           <p className="text-2xl font-bold">${costPerGap}</p>
                           <p className="text-xs text-muted-foreground">
                             Target: $50-150
                           </p>
                         </div>
+                      </div>
 
-                        {/* Active Members */}
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-1">
-                            <Users className="w-4 h-4 text-muted-foreground" />
-                            <p className="text-sm font-medium text-muted-foreground">Active Members</p>
-                          </div>
+                      {/* Active Members */}
+                      <div className="space-y-1 min-h-[120px] flex flex-col">
+                        <div className="flex items-start gap-1 min-h-[40px]">
+                          <Users className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
+                          <p className="text-sm font-medium text-muted-foreground leading-tight">Active Members</p>
+                        </div>
+                        <div className="flex-1 flex flex-col justify-center">
                           <p className="text-2xl font-bold">{campaign.activeMembers.toLocaleString()}</p>
                           <p className="text-xs text-muted-foreground">
                             Eligible population
                           </p>
                         </div>
                       </div>
-                    </div>
-
-                    {/* Right side - Edit button */}
-                    <div className="ml-6">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onEditCampaign?.(campaign.id)}
-                        className="gap-2"
-                      >
-                        <Edit2 className="w-4 h-4" />
-                        Edit Campaign
-                      </Button>
                     </div>
                   </div>
                 </Card>
