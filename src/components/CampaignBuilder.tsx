@@ -132,7 +132,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
     let newNodes: Node[] = [];
     let newEdges: Edge[] = [];
 
-    if (input.includes('mammogram') && input.includes('40-74')) {
+    if (input.includes('create a mammogram screening campaign')) {
       // Generate the complete mammogram workflow as specified
       const workflowNodes = [
         {
@@ -348,12 +348,10 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
       aiResponse += " Added high-risk pathway with family history check and urgent phone outreach.";
     }
 
-    // Add new nodes and edges to the flow
+    // Replace all nodes and edges for mammogram campaign
     if (newNodes.length > 0) {
-      setNodes(prev => [...prev.filter(n => n.id !== 'start'), ...newNodes]);
-      if (newEdges.length > 0) {
-        setEdges(prev => [...prev, ...newEdges]);
-      }
+      setNodes(newNodes);
+      setEdges(newEdges);
     } else {
       aiResponse = "I didn't recognize specific actions in your message. You can drag nodes from the palette below to build your workflow manually.";
     }
