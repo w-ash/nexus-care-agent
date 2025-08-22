@@ -537,10 +537,11 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
                                key={node.type}
                                variant="outline"
                                size="sm"
-                               onClick={() => {
-                                 addNodeFromPalette(node.type as NodeType);
-                                 setIsPaletteOpen(false);
-                               }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  addNodeFromPalette(node.type as NodeType);
+                                  setIsPaletteOpen(false);
+                                }}
                                className="w-full h-10 flex items-center justify-start gap-3 px-3 text-sm hover:bg-primary/5 hover:border-primary/20 transition-colors"
                                title={node.description}
                              >
