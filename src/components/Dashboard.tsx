@@ -224,8 +224,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember, o
                     {/* Industry-standard metrics grid */}
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
                       {/* Numerator/Denominator */}
-                      <div className="space-y-1 min-h-[120px] flex flex-col">
-                        <div className="flex items-start gap-1 min-h-[40px]">
+                      <div className="space-y-0.5 min-h-[120px] flex flex-col">
+                        <div className="flex items-start gap-1 min-h-[35px]">
                           <Target className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
                           <p className="text-sm font-medium text-muted-foreground leading-tight">Performance Rate</p>
                         </div>
@@ -238,8 +238,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember, o
                       </div>
 
                       {/* Gap Closure Rate */}
-                      <div className="space-y-1 min-h-[120px] flex flex-col">
-                        <div className="flex items-start gap-1 min-h-[40px]">
+                      <div className="space-y-0.5 min-h-[120px] flex flex-col">
+                        <div className="flex items-start gap-1 min-h-[35px]">
                           <TrendingUp className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
                           <p className="text-sm font-medium text-muted-foreground leading-tight">Gap Closure</p>
                         </div>
@@ -252,8 +252,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember, o
                       </div>
 
                       {/* Time to Closure */}
-                      <div className="space-y-1 min-h-[120px] flex flex-col">
-                        <div className="flex items-start gap-1 min-h-[40px]">
+                      <div className="space-y-0.5 min-h-[120px] flex flex-col">
+                        <div className="flex items-start gap-1 min-h-[35px]">
                           <Clock className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
                           <p className="text-sm font-medium text-muted-foreground leading-tight">Avg Time to Close</p>
                         </div>
@@ -266,8 +266,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember, o
                       </div>
 
                       {/* Member Engagement */}
-                      <div className="space-y-1 min-h-[120px] flex flex-col">
-                        <div className="flex items-start gap-1 min-h-[40px]">
+                      <div className="space-y-0.5 min-h-[120px] flex flex-col">
+                        <div className="flex items-start gap-1 min-h-[35px]">
                           <UserCheck className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
                           <p className="text-sm font-medium text-muted-foreground leading-tight">Engagement Rate</p>
                         </div>
@@ -280,8 +280,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember, o
                       </div>
 
                       {/* Cost per Gap */}
-                      <div className="space-y-1 min-h-[120px] flex flex-col">
-                        <div className="flex items-start gap-1 min-h-[40px]">
+                      <div className="space-y-0.5 min-h-[120px] flex flex-col">
+                        <div className="flex items-start gap-1 min-h-[35px]">
                           <DollarSign className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
                           <p className="text-sm font-medium text-muted-foreground leading-tight">Cost per Gap</p>
                         </div>
@@ -294,8 +294,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember, o
                       </div>
 
                       {/* Active Members */}
-                      <div className="space-y-1 min-h-[120px] flex flex-col">
-                        <div className="flex items-start gap-1 min-h-[40px]">
+                      <div className="space-y-0.5 min-h-[120px] flex flex-col">
+                        <div className="flex items-start gap-1 min-h-[35px]">
                           <Users className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
                           <p className="text-sm font-medium text-muted-foreground leading-tight">Active Members</p>
                         </div>
