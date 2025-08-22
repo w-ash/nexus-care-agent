@@ -7,6 +7,7 @@ import Header from '@/components/ui/header';
 const Index = () => {
   const [currentPage, setCurrentPage] = useState<'dashboard' | 'campaign-builder' | 'member-detail'>('dashboard');
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
 
   const handleCreateCampaign = () => {
     setCurrentPage('campaign-builder');
@@ -17,9 +18,15 @@ const Index = () => {
     setCurrentPage('member-detail');
   };
 
+  const handleEditCampaign = (campaignId: string) => {
+    setSelectedCampaignId(campaignId);
+    setCurrentPage('campaign-builder');
+  };
+
   const handleBackToDashboard = () => {
     setCurrentPage('dashboard');
     setSelectedMemberId(null);
+    setSelectedCampaignId(null);
   };
 
   if (currentPage === 'dashboard') {
@@ -28,6 +35,7 @@ const Index = () => {
         onCreateCampaign={handleCreateCampaign}
         onViewMember={handleViewMember}
         onNavigateHome={handleBackToDashboard}
+        onEditCampaign={handleEditCampaign}
       />
     );
   }
