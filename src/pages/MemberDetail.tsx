@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Send } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import Header from '@/components/ui/header';
 import MemberInfo from '@/components/member/LeftPanel/MemberInfo';
 import ActiveCampaigns from '@/components/member/LeftPanel/ActiveCampaigns';
@@ -7,9 +10,8 @@ import MemberTimeline from '@/components/member/LeftPanel/MemberTimeline';
 import SimulationControls from '@/components/member/LeftPanel/SimulationControls';
 import PersonalizedJourney from '@/components/member/CenterPanel/PersonalizedJourney';
 import JourneyLegend from '@/components/member/CenterPanel/JourneyLegend';
-import AgentChat from '@/components/member/RightPanel/AgentChat';
 import AgentHistory from '@/components/member/RightPanel/AgentHistory';
-import { getMemberMockData, getInitialJourneyState, ChatMessage, AgentDecision, Interaction } from '@/data/memberMockData';
+import { getMemberMockData, getInitialJourneyState, AgentDecision, Interaction } from '@/data/memberMockData';
 
 const MemberDetail: React.FC = () => {
   const { memberId } = useParams<{ memberId: string }>();
@@ -17,12 +19,9 @@ const MemberDetail: React.FC = () => {
   
   const [member, setMember] = useState(getMemberMockData(memberId || 'maria'));
   const [journeyState, setJourneyState] = useState(getInitialJourneyState());
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
-    {
-      sender: 'agent',
-      content: 'Hello! I\'m analyzing Maria\'s care gaps and looking for optimization opportunities. I can explain my decisions or adapt based on your guidance.',
-      timestamp: new Date()
-    }
+  const [chatInput, setChatInput] = useState('');
+  const [chatHistory, setChatHistory] = useState<Array<{ type: 'user' | 'ai', message: string }>>([
+    { type: 'ai', message: 'Hello! I\'m analyzing Maria\'s care gaps and looking for optimization opportunities. I can explain my decisions or adapt based on your guidance.' }
   ]);
   const [agentHistory, setAgentHistory] = useState<AgentDecision[]>([
     {
@@ -48,24 +47,20 @@ const MemberDetail: React.FC = () => {
     navigate('/');
   };
 
-  const handleSendMessage = (message: string) => {
-    const userMessage: ChatMessage = {
-      sender: 'user',
-      content: message,
-      timestamp: new Date()
-    };
-    
-    setChatMessages(prev => [...prev, userMessage]);
+  const handleChatSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+
+    // Add user message to chat
+    setChatHistory(prev => [...prev, { type: 'user', message: chatInput }]);
     
     // Simulate agent response
     setTimeout(() => {
-      const agentResponse: ChatMessage = {
-        sender: 'agent',
-        content: `I understand. I'll incorporate your guidance: "${message}" into Maria's journey. This will help improve the personalization.`,
-        timestamp: new Date()
-      };
-      setChatMessages(prev => [...prev, agentResponse]);
+      const aiResponse = `I understand. I'll incorporate your guidance: "${chatInput}" into Maria's journey. This will help improve the personalization.`;
+      setChatHistory(prev => [...prev, { type: 'ai', message: aiResponse }]);
     }, 1000);
+    
+    setChatInput('');
   };
 
   const handleSimulateNext = () => {
@@ -129,7 +124,7 @@ const MemberDetail: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header 
         onTitleClick={handleBackToDashboard}
         showCreateButton={false}
@@ -137,49 +132,89 @@ const MemberDetail: React.FC = () => {
         showResetButton={false}
       />
 
-      {/* Page Title */}
-      <div className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4">
-          <h1 className="text-2xl font-bold">Member Detail - {member.name}</h1>
+      <div className="flex-1 flex relative">
+        {/* Left Panel - Back Button */}
+        <div className="w-16 flex-shrink-0 p-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleBackToDashboard}
+            className="gap-2 mb-4"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
         </div>
-      </div>
 
-      {/* Three-Column Layout */}
-      <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Panel */}
-          <div className="lg:col-span-3 space-y-6">
-            <MemberInfo member={member} />
-            <ActiveCampaigns 
-              campaigns={member.activeCampaigns}
-              bundledGaps={simulationStep >= 2 ? ['HbA1c', 'Mammogram'] : []}
-            />
-            <MemberTimeline interactions={timeline} />
-            <SimulationControls
-              currentStep={simulationStep}
-              totalSteps={5}
-              onSimulateNext={handleSimulateNext}
-              onSimulateResponse={handleSimulateResponse}
-              onReset={handleReset}
-            />
+        {/* Main Content Area */}
+        <div className="flex-1 p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
+            {/* Left Panel - Member Info */}
+            <div className="lg:col-span-3 space-y-6">
+              <MemberInfo member={member} />
+              <ActiveCampaigns 
+                campaigns={member.activeCampaigns}
+                bundledGaps={simulationStep >= 2 ? ['HbA1c', 'Mammogram'] : []}
+              />
+              <MemberTimeline interactions={timeline} />
+              <SimulationControls
+                currentStep={simulationStep}
+                totalSteps={5}
+                onSimulateNext={handleSimulateNext}
+                onSimulateResponse={handleSimulateResponse}
+                onReset={handleReset}
+              />
+            </div>
+
+            {/* Center Panel - Journey */}
+            <div className="lg:col-span-9 space-y-6">
+              <PersonalizedJourney 
+                journeyState={journeyState}
+                simulationStep={simulationStep}
+              />
+              <JourneyLegend />
+              <AgentHistory decisions={agentHistory} />
+            </div>
+          </div>
+        </div>
+
+        {/* AI Assistant Chat - Bottom Right */}
+        <div className="fixed bottom-4 right-4 w-80 h-96 bg-card border rounded-lg shadow-lg flex flex-col">
+          {/* Chat Header */}
+          <div className="flex-shrink-0 p-4 border-b">
+            <h3 className="font-medium">AI Assistant</h3>
+            <p className="text-sm text-muted-foreground">Guide Maria's care journey</p>
+          </div>
+          
+          {/* Chat Messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
+            {chatHistory.map((message, index) => (
+              <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
+                  message.type === 'user' 
+                    ? 'bg-primary text-primary-foreground' 
+                    : 'bg-muted'
+                }`}>
+                  {message.message}
+                </div>
+              </div>
+            ))}
           </div>
 
-          {/* Center Panel */}
-          <div className="lg:col-span-6 space-y-6">
-            <PersonalizedJourney 
-              journeyState={journeyState}
-              simulationStep={simulationStep}
-            />
-            <JourneyLegend />
-          </div>
-
-          {/* Right Panel */}
-          <div className="lg:col-span-3 space-y-6">
-            <AgentChat 
-              messages={chatMessages}
-              onSendMessage={handleSendMessage}
-            />
-            <AgentHistory decisions={agentHistory} />
+          {/* Chat Input */}
+          <div className="flex-shrink-0 p-4 border-t">
+            <form onSubmit={handleChatSubmit}>
+              <div className="flex gap-2">
+                <Input
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  placeholder="Guide the AI agent..."
+                  className="flex-1"
+                />
+                <Button type="submit" size="icon">
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
