@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import Dashboard from '@/components/Dashboard';
+import CampaignBuilder from '@/components/CampaignBuilder';
 
 const Index = () => {
   const [currentPage, setCurrentPage] = useState<'dashboard' | 'campaign-builder' | 'member-detail'>('dashboard');
@@ -20,8 +21,6 @@ const Index = () => {
     setSelectedMemberId(null);
   };
 
-  // For now, just render the Dashboard
-  // We'll add the other pages in subsequent phases
   if (currentPage === 'dashboard') {
     return (
       <Dashboard 
@@ -31,7 +30,19 @@ const Index = () => {
     );
   }
 
-  // Placeholder for other pages
+  if (currentPage === 'campaign-builder') {
+    return (
+      <CampaignBuilder 
+        onBack={handleBackToDashboard}
+        onSave={(campaign) => {
+          // TODO: Save campaign to mock data
+          console.log('Saving campaign:', campaign);
+        }}
+      />
+    );
+  }
+
+  // Placeholder for member detail page
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-4xl mx-auto">
@@ -43,8 +54,7 @@ const Index = () => {
         </button>
         <div className="text-center py-12">
           <h2 className="text-2xl font-semibold mb-4">
-            {currentPage === 'campaign-builder' ? 'Campaign Builder' : 'Member Detail'} 
-            - Coming Soon
+            Member Detail - Coming Soon
           </h2>
           <p className="text-muted-foreground">
             This page will be implemented in the next phase
