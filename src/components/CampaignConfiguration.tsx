@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Command, CommandInput, CommandList, CommandItem, CommandEmpty } from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { X } from 'lucide-react';
 
 interface BundlingRules {
-  hba1c: boolean;
-  fluShot: boolean;
-  bloodPressure: boolean;
-  mammogram: boolean;
+  selectedCampaigns: string[];
 }
 
 interface CampaignConfigurationProps {
@@ -42,6 +42,34 @@ const CampaignConfiguration: React.FC<CampaignConfigurationProps> = ({
   onDeploy,
   isDeployDisabled,
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  // Available campaigns to bundle with
+  const availableCampaigns = [
+    "HbA1c Testing Campaign",
+    "Flu Shot Initiative", 
+    "Blood Pressure Screening",
+    "Mammogram Outreach",
+    "Diabetes Prevention Program",
+    "Cholesterol Management",
+    "Preventive Care Reminders",
+    "Annual Wellness Visits"
+  ];
+
+  const addCampaign = (campaign: string) => {
+    if (!bundlingRules.selectedCampaigns.includes(campaign)) {
+      setBundlingRules(prev => ({
+        selectedCampaigns: [...prev.selectedCampaigns, campaign]
+      }));
+    }
+    setIsOpen(false);
+  };
+
+  const removeCampaign = (campaign: string) => {
+    setBundlingRules(prev => ({
+      selectedCampaigns: prev.selectedCampaigns.filter(c => c !== campaign)
+    }));
+  };
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
@@ -90,39 +118,46 @@ const CampaignConfiguration: React.FC<CampaignConfigurationProps> = ({
 
         <div>
           <Label>Bundling Rules</Label>
-          <div className="space-y-2 mt-2">
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="hba1c" 
-                checked={bundlingRules.hba1c}
-                onCheckedChange={(checked) => setBundlingRules(prev => ({ ...prev, hba1c: !!checked }))}
-              />
-              <Label htmlFor="hba1c" className="text-sm">HbA1c Testing</Label>
+          <div className="mt-2 space-y-2">
+            {/* Selected campaigns as pills */}
+            <div className="flex flex-wrap gap-2">
+              {bundlingRules.selectedCampaigns.map((campaign) => (
+                <Badge key={campaign} variant="secondary" className="flex items-center gap-1">
+                  {campaign}
+                  <X 
+                    className="h-3 w-3 cursor-pointer hover:text-destructive" 
+                    onClick={() => removeCampaign(campaign)}
+                  />
+                </Badge>
+              ))}
             </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="flu" 
-                checked={bundlingRules.fluShot}
-                onCheckedChange={(checked) => setBundlingRules(prev => ({ ...prev, fluShot: !!checked }))}
-              />
-              <Label htmlFor="flu" className="text-sm">Flu Shot</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="blood-pressure" 
-                checked={bundlingRules.bloodPressure}
-                onCheckedChange={(checked) => setBundlingRules(prev => ({ ...prev, bloodPressure: !!checked }))}
-              />
-              <Label htmlFor="blood-pressure" className="text-sm">Blood Pressure</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="mammogram" 
-                checked={bundlingRules.mammogram}
-                onCheckedChange={(checked) => setBundlingRules(prev => ({ ...prev, mammogram: !!checked }))}
-              />
-              <Label htmlFor="mammogram" className="text-sm">Mammogram</Label>
-            </div>
+            
+            {/* Add campaign picker */}
+            <Popover open={isOpen} onOpenChange={setIsOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="w-full justify-start text-muted-foreground">
+                  + Add campaigns to bundle
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-0" align="start">
+                <Command>
+                  <CommandInput placeholder="Search campaigns..." />
+                  <CommandList>
+                    <CommandEmpty>No campaigns found.</CommandEmpty>
+                    {availableCampaigns
+                      .filter(campaign => !bundlingRules.selectedCampaigns.includes(campaign))
+                      .map((campaign) => (
+                        <CommandItem
+                          key={campaign}
+                          onSelect={() => addCampaign(campaign)}
+                        >
+                          {campaign}
+                        </CommandItem>
+                      ))}
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
 
