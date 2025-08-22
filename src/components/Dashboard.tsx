@@ -218,7 +218,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember })
                       />
                     </div>
                     <p className="text-xs text-muted-foreground text-center">
-                      {Math.round((campaign.targetMembers - campaign.activeMembers) / campaign.targetMembers * 100)}% completed
+                      {campaign.closureRate}% closure rate
                     </p>
                   </div>
                 </div>
