@@ -477,17 +477,12 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b bg-card px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
-            </Button>
-            <h1 className="text-2xl font-semibold">Campaign Builder</h1>
-          </div>
-          <Button onClick={handleDeploy} disabled={!campaignName.trim()}>
-            Deploy Campaign
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="sm" onClick={onBack}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Dashboard
           </Button>
+          <h1 className="text-2xl font-semibold">Campaign Builder</h1>
         </div>
       </div>
 
@@ -505,6 +500,8 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
             setBundlingRules={setBundlingRules}
             splitPercentage={splitPercentage}
             setSplitPercentage={setSplitPercentage}
+            onDeploy={handleDeploy}
+            isDeployDisabled={!campaignName.trim()}
           />
         </div>
 
@@ -624,7 +621,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
         </div>
 
         {/* Right Panel - AI Assistant */}
-        <div className="w-96 border-l bg-card flex flex-col">
+        <div className="w-96 border-l bg-card flex flex-col max-h-full">
           {/* Chat Interface */}
           <div className="flex-1 flex flex-col">
             <div className="p-4 border-b">
