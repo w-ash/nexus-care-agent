@@ -518,7 +518,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
                 className="absolute inset-0 z-10" 
                 onClick={() => setIsPaletteOpen(false)}
               />
-              <Card className="absolute bottom-20 left-4 w-80 shadow-lg border-muted/20 z-20 animate-scale-in">
+              <Card className="absolute bottom-20 right-4 w-80 shadow-lg border-muted/20 z-20 animate-scale-in">
                 <CardHeader className="pb-3 bg-gradient-to-r from-primary/5 to-primary/10">
                   <CardTitle className="text-sm font-medium">Add Node</CardTitle>
                 </CardHeader>
@@ -599,7 +599,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
           {/* Add Node Button */}
           <Button
             onClick={() => setIsPaletteOpen(!isPaletteOpen)}
-            className="absolute bottom-4 left-4 w-12 h-12 rounded-full shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground hover:scale-110 transition-all duration-200 z-30"
+            className="absolute bottom-4 right-4 w-12 h-12 rounded-full shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground hover:scale-110 transition-all duration-200 z-30"
             size="icon"
           >
             <Plus className={`w-6 h-6 transition-transform duration-200 ${isPaletteOpen ? 'rotate-45' : ''}`} />
