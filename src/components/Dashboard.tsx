@@ -224,87 +224,75 @@ const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember, o
                     {/* Industry-standard metrics grid */}
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
                       {/* Numerator/Denominator */}
-                      <div className="space-y-0.5 min-h-[120px] flex flex-col">
-                        <div className="flex items-start gap-1 min-h-[35px]">
+                      <div>
+                        <div className="flex items-start gap-1 mb-1">
                           <Target className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
                           <p className="text-sm font-medium text-muted-foreground leading-tight">Performance Rate</p>
                         </div>
-                        <div className="flex-1 flex flex-col justify-center">
-                          <p className="text-2xl font-bold text-success">{performanceRate.toFixed(1)}%</p>
-                          <p className="text-xs text-muted-foreground">
-                            {numerator.toLocaleString()}/{eligiblePopulation.toLocaleString()} EPOP
-                          </p>
-                        </div>
+                        <p className="text-2xl font-bold text-success mb-1">{performanceRate.toFixed(1)}%</p>
+                        <p className="text-xs text-muted-foreground">
+                          {numerator.toLocaleString()}/{eligiblePopulation.toLocaleString()} EPOP
+                        </p>
                       </div>
 
                       {/* Gap Closure Rate */}
-                      <div className="space-y-0.5 min-h-[120px] flex flex-col">
-                        <div className="flex items-start gap-1 min-h-[35px]">
+                      <div>
+                        <div className="flex items-start gap-1 mb-1">
                           <TrendingUp className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
                           <p className="text-sm font-medium text-muted-foreground leading-tight">Gap Closure</p>
                         </div>
-                        <div className="flex-1 flex flex-col justify-center">
-                          <p className="text-2xl font-bold">{Number(campaign.closureRate).toFixed(1)}%</p>
-                          <p className="text-xs text-muted-foreground">
-                            Target: 75-85%
-                          </p>
-                        </div>
+                        <p className="text-2xl font-bold mb-1">{Number(campaign.closureRate).toFixed(1)}%</p>
+                        <p className="text-xs text-muted-foreground">
+                          Target: 75-85%
+                        </p>
                       </div>
 
                       {/* Time to Closure */}
-                      <div className="space-y-0.5 min-h-[120px] flex flex-col">
-                        <div className="flex items-start gap-1 min-h-[35px]">
+                      <div>
+                        <div className="flex items-start gap-1 mb-1">
                           <Clock className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
                           <p className="text-sm font-medium text-muted-foreground leading-tight">Avg Time to Close</p>
                         </div>
-                        <div className="flex-1 flex flex-col justify-center">
-                          <p className="text-2xl font-bold">{avgTimeToClose}d</p>
-                          <p className="text-xs text-muted-foreground">
-                            Target: 45-60d
-                          </p>
-                        </div>
+                        <p className="text-2xl font-bold mb-1">{avgTimeToClose}d</p>
+                        <p className="text-xs text-muted-foreground">
+                          Target: 45-60d
+                        </p>
                       </div>
 
                       {/* Member Engagement */}
-                      <div className="space-y-0.5 min-h-[120px] flex flex-col">
-                        <div className="flex items-start gap-1 min-h-[35px]">
+                      <div>
+                        <div className="flex items-start gap-1 mb-1">
                           <UserCheck className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
                           <p className="text-sm font-medium text-muted-foreground leading-tight">Engagement Rate</p>
                         </div>
-                        <div className="flex-1 flex flex-col justify-center">
-                          <p className="text-2xl font-bold">{engagementRate}%</p>
-                          <p className="text-xs text-muted-foreground">
-                            Target: 75%
-                          </p>
-                        </div>
+                        <p className="text-2xl font-bold mb-1">{engagementRate}%</p>
+                        <p className="text-xs text-muted-foreground">
+                          Target: 75%
+                        </p>
                       </div>
 
                       {/* Cost per Gap */}
-                      <div className="space-y-0.5 min-h-[120px] flex flex-col">
-                        <div className="flex items-start gap-1 min-h-[35px]">
+                      <div>
+                        <div className="flex items-start gap-1 mb-1">
                           <DollarSign className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
                           <p className="text-sm font-medium text-muted-foreground leading-tight">Cost per Gap</p>
                         </div>
-                        <div className="flex-1 flex flex-col justify-center">
-                          <p className="text-2xl font-bold">${costPerGap}</p>
-                          <p className="text-xs text-muted-foreground">
-                            Target: $50-150
-                          </p>
-                        </div>
+                        <p className="text-2xl font-bold mb-1">${costPerGap}</p>
+                        <p className="text-xs text-muted-foreground">
+                          Target: $50-150
+                        </p>
                       </div>
 
                       {/* Active Members */}
-                      <div className="space-y-0.5 min-h-[120px] flex flex-col">
-                        <div className="flex items-start gap-1 min-h-[35px]">
+                      <div>
+                        <div className="flex items-start gap-1 mb-1">
                           <Users className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
                           <p className="text-sm font-medium text-muted-foreground leading-tight">Active Members</p>
                         </div>
-                        <div className="flex-1 flex flex-col justify-center">
-                          <p className="text-2xl font-bold">{campaign.activeMembers.toLocaleString()}</p>
-                          <p className="text-xs text-muted-foreground">
-                            Eligible population
-                          </p>
-                        </div>
+                        <p className="text-2xl font-bold mb-1">{campaign.activeMembers.toLocaleString()}</p>
+                        <p className="text-xs text-muted-foreground">
+                          Eligible population
+                        </p>
                       </div>
                     </div>
                   </div>
