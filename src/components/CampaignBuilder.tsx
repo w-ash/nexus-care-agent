@@ -32,6 +32,7 @@ import WaitNode from './nodes/WaitNode';
 import KnowledgeNode from './nodes/KnowledgeNode';
 import EndNode from './nodes/EndNode';
 import NodeConfigurationModal from './NodeConfigurationModal';
+import CampaignConfiguration from './CampaignConfiguration';
 
 const nodeTypes = {
   trigger: (props: any) => <TriggerNode {...props} onEdit={() => props.data.onEdit?.(props.id)} />,
@@ -491,7 +492,23 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
       </div>
 
       <div className="flex h-[calc(100vh-80px)]">
-        {/* Left Panel - React Flow Canvas */}
+        {/* Left Panel - Campaign Configuration */}
+        <div className="w-80 border-r bg-card">
+          <CampaignConfiguration
+            campaignName={campaignName}
+            setCampaignName={setCampaignName}
+            priority={priority}
+            setPriority={setPriority}
+            estimatedROI={estimatedROI}
+            setEstimatedROI={setEstimatedROI}
+            bundlingRules={bundlingRules}
+            setBundlingRules={setBundlingRules}
+            splitPercentage={splitPercentage}
+            setSplitPercentage={setSplitPercentage}
+          />
+        </div>
+
+        {/* Center Panel - React Flow Canvas */}
         <div className="flex-1 relative">
           <ReactFlow
             nodes={nodes}
@@ -606,9 +623,8 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
           </Button>
         </div>
 
-        {/* Right Panel */}
+        {/* Right Panel - AI Assistant */}
         <div className="w-96 border-l bg-card flex flex-col">
-
           {/* Chat Interface */}
           <div className="flex-1 flex flex-col">
             <div className="p-4 border-b">
@@ -643,84 +659,6 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
                 </Button>
               </div>
             </form>
-          </div>
-
-          <Separator />
-
-          {/* Campaign Configuration Panel */}
-          <div className="p-4 space-y-4 bg-muted/20">
-            <h3 className="font-medium">Campaign Configuration</h3>
-            
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="campaign-name">Campaign Name</Label>
-                <Input
-                  id="campaign-name"
-                  value={campaignName}
-                  onChange={(e) => setCampaignName(e.target.value)}
-                  placeholder="e.g., Mammogram Screening Q1 2025"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="priority">Priority & ROI</Label>
-                <div className="flex gap-2">
-                  <Input
-                    value={priority}
-                    onChange={(e) => setPriority(e.target.value)}
-                    placeholder="Medium"
-                    className="flex-1"
-                  />
-                  <Input
-                    value={estimatedROI}
-                    onChange={(e) => setEstimatedROI(e.target.value)}
-                    placeholder="380"
-                    className="flex-1"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <Label>Bundling Rules</Label>
-                <div className="space-y-2 mt-2">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="hba1c" 
-                      checked={bundlingRules.hba1c}
-                      onCheckedChange={(checked) => setBundlingRules(prev => ({ ...prev, hba1c: !!checked }))}
-                    />
-                    <Label htmlFor="hba1c" className="text-sm">HbA1c Testing</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="flu" 
-                      checked={bundlingRules.fluShot}
-                      onCheckedChange={(checked) => setBundlingRules(prev => ({ ...prev, fluShot: !!checked }))}
-                    />
-                    <Label htmlFor="flu" className="text-sm">Flu Shot</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="mammogram" 
-                      checked={bundlingRules.mammogram}
-                      onCheckedChange={(checked) => setBundlingRules(prev => ({ ...prev, mammogram: !!checked }))}
-                    />
-                    <Label htmlFor="mammogram" className="text-sm">Mammogram</Label>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <Label>A/B Split: {splitPercentage[0]}% AI Agent</Label>
-                <Slider
-                  value={splitPercentage}
-                  onValueChange={setSplitPercentage}
-                  max={100}
-                  step={5}
-                  className="mt-2"
-                />
-              </div>
-            </div>
           </div>
         </div>
       </div>
