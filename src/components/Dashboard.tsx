@@ -188,8 +188,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember, o
             {campaigns.map((campaign) => {
               // Calculate industry-standard metrics
               const eligiblePopulation = Math.floor(campaign.activeMembers * 1.15); // EPOP includes exclusions
-              const numerator = Math.floor(campaign.activeMembers * (campaign.closureRate / 100));
+              const numerator = Math.floor(eligiblePopulation * (campaign.closureRate / 100));
               const performanceRate = ((numerator / eligiblePopulation) * 100);
+              const openGaps = eligiblePopulation - numerator;
               const avgTimeToClose = Math.floor(30 + Math.random() * 35); // 30-65 days
               const engagementRate = Math.floor(65 + Math.random() * 25); // 65-90%
               const costPerGap = campaign.roi;
@@ -235,15 +236,15 @@ const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember, o
                         </p>
                       </div>
 
-                      {/* Gap Closure Rate */}
+                      {/* Open Gaps */}
                       <div>
                         <div className="flex items-start gap-1 mb-1">
-                          <TrendingUp className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
-                          <p className="text-sm font-medium text-muted-foreground leading-tight">Gap Closure</p>
+                          <AlertCircle className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
+                          <p className="text-sm font-medium text-muted-foreground leading-tight">Open Gaps</p>
                         </div>
-                        <p className="text-2xl font-bold mb-1">{Number(campaign.closureRate).toFixed(1)}%</p>
+                        <p className="text-2xl font-bold mb-1">{openGaps.toLocaleString()}</p>
                         <p className="text-xs text-muted-foreground">
-                          Target: 75-85%
+                          Remaining members
                         </p>
                       </div>
 
@@ -283,15 +284,15 @@ const Dashboard: React.FC<DashboardProps> = ({ onCreateCampaign, onViewMember, o
                         </p>
                       </div>
 
-                      {/* Active Members */}
+                      {/* Eligible Population */}
                       <div>
                         <div className="flex items-start gap-1 mb-1">
                           <Users className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
-                          <p className="text-sm font-medium text-muted-foreground leading-tight">Active Members</p>
+                          <p className="text-sm font-medium text-muted-foreground leading-tight">Eligible Population</p>
                         </div>
-                        <p className="text-2xl font-bold mb-1">{campaign.activeMembers.toLocaleString()}</p>
+                        <p className="text-2xl font-bold mb-1">{eligiblePopulation.toLocaleString()}</p>
                         <p className="text-xs text-muted-foreground">
-                          Eligible population
+                          EPOP total
                         </p>
                       </div>
                     </div>
