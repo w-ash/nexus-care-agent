@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import Header from '@/components/ui/header';
 import MemberInfo from '@/components/member/LeftPanel/MemberInfo';
 import ActiveCampaigns from '@/components/member/LeftPanel/ActiveCampaigns';
 import MemberTimeline from '@/components/member/LeftPanel/MemberTimeline';
@@ -44,6 +43,10 @@ const MemberDetail: React.FC = () => {
     }
   ]);
   const [simulationStep, setSimulationStep] = useState(1);
+
+  const handleBackToDashboard = () => {
+    navigate('/');
+  };
 
   const handleSendMessage = (message: string) => {
     const userMessage: ChatMessage = {
@@ -109,10 +112,17 @@ const MemberDetail: React.FC = () => {
 
   if (!member) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Member not found</h2>
-          <Button onClick={() => navigate('/')}>Return to Dashboard</Button>
+      <div className="min-h-screen bg-background">
+        <Header 
+          onTitleClick={handleBackToDashboard}
+          showCreateButton={false}
+          showSimulateButton={false}
+          showResetButton={false}
+        />
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <h2 className="text-xl font-semibold mb-2">Member not found</h2>
+          </div>
         </div>
       </div>
     );
@@ -120,22 +130,17 @@ const MemberDetail: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
+      <Header 
+        onTitleClick={handleBackToDashboard}
+        showCreateButton={false}
+        showSimulateButton={false}
+        showResetButton={false}
+      />
+
+      {/* Page Title */}
       <div className="border-b bg-card">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate('/')}
-              className="gap-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to Dashboard
-            </Button>
-            <div className="h-6 w-px bg-border" />
-            <h1 className="text-2xl font-bold">Member Detail</h1>
-          </div>
+          <h1 className="text-2xl font-bold">Member Detail - {member.name}</h1>
         </div>
       </div>
 
