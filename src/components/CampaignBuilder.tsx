@@ -10,6 +10,7 @@ import {
   Edge,
   Connection,
   Position,
+  MarkerType,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Button } from '@/components/ui/button';
@@ -89,7 +90,11 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
   const [splitPercentage, setSplitPercentage] = useState([25]);
 
   const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
+    (params: Connection) => setEdges((eds) => addEdge({
+      ...params,
+      style: { strokeWidth: 2, stroke: 'hsl(var(--primary))' },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'hsl(var(--primary))' }
+    }, eds)),
     [setEdges]
   );
 
