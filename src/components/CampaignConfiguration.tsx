@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface BundlingRules {
   hba1c: boolean;
@@ -62,20 +63,28 @@ const CampaignConfiguration: React.FC<CampaignConfigurationProps> = ({
         </div>
 
         <div>
-          <Label htmlFor="priority">Priority & ROI</Label>
+          <Label>Priority & Financial Impact</Label>
           <div className="flex gap-2">
-            <Input
-              value={priority}
-              onChange={(e) => setPriority(e.target.value)}
-              placeholder="Medium"
-              className="flex-1"
-            />
-            <Input
-              value={estimatedROI}
-              onChange={(e) => setEstimatedROI(e.target.value)}
-              placeholder="380"
-              className="flex-1"
-            />
+            <Select value={priority} onValueChange={setPriority}>
+              <SelectTrigger className="flex-1">
+                <SelectValue placeholder="Select priority" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Critical">Critical</SelectItem>
+                <SelectItem value="High">High</SelectItem>
+                <SelectItem value="Medium">Medium</SelectItem>
+                <SelectItem value="Low">Low</SelectItem>
+              </SelectContent>
+            </Select>
+            <div className="flex-1 relative">
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">$</span>
+              <Input
+                value={estimatedROI}
+                onChange={(e) => setEstimatedROI(e.target.value)}
+                placeholder="380,000"
+                className="pl-7"
+              />
+            </div>
           </div>
         </div>
 
