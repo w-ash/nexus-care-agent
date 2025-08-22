@@ -1,36 +1,30 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Timer, Calendar } from 'lucide-react';
+import { Database, Search, FileText, Heart } from 'lucide-react';
 
-interface WaitNodeData {
+interface KnowledgeNodeData {
   label: string;
   category: string;
   config?: {
-    duration: number;
-    unit: 'hours' | 'days' | 'weeks';
-    businessDaysOnly?: boolean;
+    dataSource: string;
+    check: string;
+    timeframe?: string;
   };
 }
 
-interface WaitNodeProps {
-  data: WaitNodeData;
+interface KnowledgeNodeProps {
+  data: KnowledgeNodeData;
   selected?: boolean;
 }
 
-const WaitNode: React.FC<WaitNodeProps> = ({ data, selected }) => {
+const KnowledgeNode: React.FC<KnowledgeNodeProps> = ({ data, selected }) => {
   const getIcon = () => {
-    switch (data.config?.unit) {
-      case 'hours': return <Timer className="h-3 w-3 text-white" />;
-      case 'weeks': return <Calendar className="h-3 w-3 text-white" />;
-      default: return <Clock className="h-3 w-3 text-white" />;
+    switch (data.config?.dataSource) {
+      case 'health_data_engine': return <Heart className="h-3 w-3 text-white" />;
+      case 'member_profile': return <FileText className="h-3 w-3 text-white" />;
+      default: return <Database className="h-3 w-3 text-white" />;
     }
-  };
-
-  const getDurationText = () => {
-    if (!data.config) return '';
-    const { duration, unit } = data.config;
-    return `${duration} ${unit}${duration !== 1 ? '' : unit.slice(0, -1)}`;
   };
 
   return (
@@ -44,25 +38,25 @@ const WaitNode: React.FC<WaitNodeProps> = ({ data, selected }) => {
       />
       
       <div className="flex items-center gap-2 mb-2">
-        <div className="w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center">
+        <div className="w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center">
           {getIcon()}
         </div>
-        <Badge variant="secondary" className="text-xs font-medium">⏰ Wait</Badge>
+        <Badge variant="secondary" className="text-xs font-medium">🧠 Knowledge</Badge>
       </div>
       
       <div className="text-sm font-semibold text-foreground mb-1">
         {data.label}
       </div>
       
-      {data.config && (
-        <div className="text-xs text-muted-foreground">
-          {getDurationText()}
+      {data.config?.check && (
+        <div className="text-xs text-muted-foreground mb-1">
+          {data.config.check.replace(/_/g, ' ')}
         </div>
       )}
       
-      {data.config?.businessDaysOnly && (
+      {data.config?.timeframe && (
         <div className="text-xs text-muted-foreground">
-          Business days only
+          {data.config.timeframe.replace(/_/g, ' ')}
         </div>
       )}
       
@@ -75,4 +69,4 @@ const WaitNode: React.FC<WaitNodeProps> = ({ data, selected }) => {
   );
 };
 
-export default WaitNode;
+export default KnowledgeNode;

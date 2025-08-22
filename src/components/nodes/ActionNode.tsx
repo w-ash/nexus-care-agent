@@ -1,12 +1,21 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { Badge } from '@/components/ui/badge';
-import { MessageSquare, Phone, Mail } from 'lucide-react';
+import { Calendar, AlertTriangle, FileEdit, UserPlus } from 'lucide-react';
 
 interface ActionNodeData {
   label: string;
-  actionType: 'sms' | 'phone' | 'email';
-  message?: string;
+  category: string;
+  config?: {
+    appointmentType?: string;
+    schedulingMethod?: 'auto' | 'transfer_to_scheduler';
+    allowBundling?: boolean;
+    escalationType?: string;
+    priority?: 'high' | 'medium' | 'low';
+    reason?: string;
+    updateType?: string;
+    value?: string;
+  };
 }
 
 interface ActionNodeProps {
@@ -16,34 +25,22 @@ interface ActionNodeProps {
 
 const ActionNode: React.FC<ActionNodeProps> = ({ data, selected }) => {
   const getIcon = () => {
-    switch (data.actionType) {
-      case 'sms':
-        return <MessageSquare className="h-3 w-3 text-white" />;
-      case 'phone':
-        return <Phone className="h-3 w-3 text-white" />;
-      case 'email':
-        return <Mail className="h-3 w-3 text-white" />;
-      default:
-        return <MessageSquare className="h-3 w-3 text-white" />;
-    }
+    if (data.config?.appointmentType) return <Calendar className="h-3 w-3 text-white" />;
+    if (data.config?.escalationType) return <AlertTriangle className="h-3 w-3 text-white" />;
+    if (data.config?.updateType) return <FileEdit className="h-3 w-3 text-white" />;
+    return <UserPlus className="h-3 w-3 text-white" />;
   };
 
   const getColor = () => {
-    switch (data.actionType) {
-      case 'sms':
-        return 'bg-blue-500';
-      case 'phone':
-        return 'bg-green-500';
-      case 'email':
-        return 'bg-purple-500';
-      default:
-        return 'bg-blue-500';
-    }
+    if (data.config?.appointmentType) return 'bg-teal-500';
+    if (data.config?.escalationType) return 'bg-red-500';
+    if (data.config?.updateType) return 'bg-blue-500';
+    return 'bg-teal-500';
   };
 
   return (
-    <div className={`bg-card border-2 rounded-lg px-4 py-3 min-w-[140px] shadow-sm ${
-      selected ? 'border-primary' : 'border-border'
+    <div className={`bg-card border-2 rounded-lg px-4 py-3 min-w-[160px] shadow-lg transition-all ${
+      selected ? 'border-primary shadow-primary/20' : 'border-border hover:border-primary/50'
     }`}>
       <Handle
         type="target"
@@ -55,18 +52,28 @@ const ActionNode: React.FC<ActionNodeProps> = ({ data, selected }) => {
         <div className={`w-6 h-6 rounded-full ${getColor()} flex items-center justify-center`}>
           {getIcon()}
         </div>
-        <Badge variant="secondary" className="text-xs">
-          {data.actionType.toUpperCase()}
-        </Badge>
+        <Badge variant="secondary" className="text-xs font-medium">📅 Action</Badge>
       </div>
       
-      <div className="text-sm font-medium text-foreground mb-1">
+      <div className="text-sm font-semibold text-foreground mb-1">
         {data.label}
       </div>
       
-      {data.message && (
-        <div className="text-xs text-muted-foreground truncate max-w-[120px]">
-          "{data.message}"
+      {data.config?.appointmentType && (
+        <div className="text-xs text-muted-foreground">
+          {data.config.appointmentType.replace(/_/g, ' ')}
+        </div>
+      )}
+      
+      {data.config?.escalationType && (
+        <div className="text-xs text-muted-foreground">
+          To: {data.config.escalationType.replace(/_/g, ' ')}
+        </div>
+      )}
+      
+      {data.config?.priority && (
+        <div className="text-xs text-muted-foreground">
+          Priority: {data.config.priority}
         </div>
       )}
       

@@ -23,23 +23,36 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Send, Plus, ArrowLeft } from 'lucide-react';
 import TriggerNode from './nodes/TriggerNode';
+import OutreachNode from './nodes/OutreachNode';
 import ActionNode from './nodes/ActionNode';
 import DecisionNode from './nodes/DecisionNode';
 import WaitNode from './nodes/WaitNode';
+import KnowledgeNode from './nodes/KnowledgeNode';
+import EndNode from './nodes/EndNode';
 
 const nodeTypes = {
   trigger: TriggerNode,
+  outreach: OutreachNode,
   action: ActionNode,
   decision: DecisionNode,
   wait: WaitNode,
+  knowledge: KnowledgeNode,
+  end: EndNode,
 };
 
 const initialNodes: Node[] = [
   {
     id: 'start',
     type: 'trigger',
-    position: { x: 250, y: 50 },
-    data: { label: 'Campaign Start', trigger: 'member_eligible' },
+    position: { x: 100, y: 100 },
+    data: { 
+      label: 'Campaign Start', 
+      category: '🎯 Triggers',
+      config: {
+        gapType: 'General',
+        daysOverdue: 0
+      }
+    },
   },
 ];
 
@@ -56,7 +69,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [chatInput, setChatInput] = useState('');
   const [chatHistory, setChatHistory] = useState<Array<{ type: 'user' | 'ai', message: string }>>([
-    { type: 'ai', message: 'Hi! I can help you create a campaign workflow. Try describing your campaign in natural language, like: "Send SMS to members over 50, wait 3 days, then call those who didn\'t respond"' }
+    { type: 'ai', message: 'Hi! I can help you create a campaign workflow. Try: "Create a mammogram screening campaign for women 40-74 who are overdue. For women 40-49, send educational SMS first, then scheduling help. For 50+, go straight to scheduling. Try SMS, wait 5 days, then phone call."' }
   ]);
 
   // Campaign configuration state
@@ -87,67 +100,234 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
     // Add user message to chat
     setChatHistory(prev => [...prev, { type: 'user', message: chatInput }]);
 
-    // Process keywords and generate nodes
+    // Process keywords and generate comprehensive mammogram workflow
     const input = chatInput.toLowerCase();
-    let aiResponse = "I've analyzed your request. ";
+    let aiResponse = "I've analyzed your request and created a complete mammogram screening workflow. ";
     let newNodes: Node[] = [];
+    let newEdges: Edge[] = [];
 
-    // Keyword matching logic
-    if (input.includes('mammogram') || input.includes('screening')) {
-      newNodes.push({
-        id: `action-${Date.now()}`,
-        type: 'action',
-        position: { x: 250, y: 150 },
-        data: { label: 'Mammogram Outreach', actionType: 'sms', message: 'Time for your mammogram screening' },
-      });
-      aiResponse += "Created mammogram outreach action. ";
+    if (input.includes('mammogram') && input.includes('40-74')) {
+      // Generate the complete mammogram workflow as specified
+      const workflowNodes = [
+        {
+          id: 'trigger_mammogram',
+          type: 'trigger',
+          position: { x: 100, y: 200 },
+          data: {
+            label: 'Mammogram Overdue',
+            category: '🎯 Triggers',
+            config: {
+              gapType: 'Mammogram',
+              daysOverdue: 365,
+              gender: 'female',
+              ageRange: { min: 40, max: 74 }
+            }
+          }
+        },
+        {
+          id: 'age_check',
+          type: 'decision',
+          position: { x: 300, y: 200 },
+          data: {
+            label: 'Age Group Check',
+            category: '🤔 Decisions',
+            config: {
+              condition: 'age',
+              branches: [
+                { operator: '<', value: 50, label: '40-49' },
+                { operator: '>=', value: 50, label: '50+' }
+              ]
+            }
+          }
+        },
+        {
+          id: 'sms_education',
+          type: 'outreach',
+          position: { x: 500, y: 100 },
+          data: {
+            label: 'Educational SMS',
+            category: '💬 Outreach',
+            config: {
+              channel: 'sms',
+              template: 'mammogram_guidelines_40s',
+              timeOfDay: 'morning'
+            }
+          }
+        },
+        {
+          id: 'wait_edu',
+          type: 'wait',
+          position: { x: 700, y: 100 },
+          data: {
+            label: 'Wait 2 Days',
+            category: '⏰ Wait',
+            config: { duration: 2, unit: 'days' }
+          }
+        },
+        {
+          id: 'sms_schedule_young',
+          type: 'outreach',
+          position: { x: 900, y: 100 },
+          data: {
+            label: 'Scheduling SMS',
+            category: '💬 Outreach',
+            config: {
+              channel: 'sms',
+              template: 'schedule_mammogram'
+            }
+          }
+        },
+        {
+          id: 'sms_schedule_older',
+          type: 'outreach',
+          position: { x: 500, y: 300 },
+          data: {
+            label: 'Scheduling SMS',
+            category: '💬 Outreach',
+            config: {
+              channel: 'sms',
+              template: 'schedule_mammogram_urgent'
+            }
+          }
+        },
+        {
+          id: 'wait_main',
+          type: 'wait',
+          position: { x: 700, y: 250 },
+          data: {
+            label: 'Wait 5 Days',
+            category: '⏰ Wait',
+            config: { duration: 5, unit: 'days' }
+          }
+        },
+        {
+          id: 'phone_followup',
+          type: 'outreach',
+          position: { x: 900, y: 250 },
+          data: {
+            label: 'Phone Follow-up',
+            category: '💬 Outreach',
+            config: {
+              channel: 'phone',
+              callType: 'automated'
+            }
+          }
+        },
+        {
+          id: 'response_check',
+          type: 'decision',
+          position: { x: 1100, y: 250 },
+          data: {
+            label: 'Response Check',
+            category: '🤔 Decisions',
+            config: {
+              condition: 'response_received',
+              branches: [
+                { value: true, label: 'Responded' },
+                { value: false, label: 'No Response' }
+              ]
+            }
+          }
+        },
+        {
+          id: 'end_success',
+          type: 'end',
+          position: { x: 1300, y: 200 },
+          data: {
+            label: 'Campaign Complete',
+            category: '✅ End',
+            config: { outcome: 'success' }
+          }
+        },
+        {
+          id: 'end_incomplete',
+          type: 'end',
+          position: { x: 1300, y: 350 },
+          data: {
+            label: 'Max Attempts',
+            category: '✅ End',
+            config: { outcome: 'incomplete' }
+          }
+        }
+      ];
+
+      const workflowEdges = [
+        { id: 'e1', source: 'trigger_mammogram', target: 'age_check' },
+        { id: 'e2', source: 'age_check', target: 'sms_education', sourceHandle: 'true', label: '40-49' },
+        { id: 'e3', source: 'age_check', target: 'sms_schedule_older', sourceHandle: 'false', label: '50+' },
+        { id: 'e4', source: 'sms_education', target: 'wait_edu' },
+        { id: 'e5', source: 'wait_edu', target: 'sms_schedule_young' },
+        { id: 'e6', source: 'sms_schedule_young', target: 'wait_main' },
+        { id: 'e7', source: 'sms_schedule_older', target: 'wait_main' },
+        { id: 'e8', source: 'wait_main', target: 'phone_followup' },
+        { id: 'e9', source: 'phone_followup', target: 'response_check' },
+        { id: 'e10', source: 'response_check', target: 'end_success', sourceHandle: 'true', label: 'Responded' },
+        { id: 'e11', source: 'response_check', target: 'end_incomplete', sourceHandle: 'false', label: 'No Response' }
+      ];
+
+      newNodes = workflowNodes;
+      newEdges = workflowEdges;
+      aiResponse = "Created complete mammogram screening workflow with age-based branching, educational messaging for younger women, SMS/phone progression, and proper end states.";
     }
 
-    if (input.includes('age') || input.includes('40-49') || input.includes('50+')) {
-      newNodes.push({
-        id: `decision-${Date.now()}`,
-        type: 'decision',
-        position: { x: 400, y: 150 },
-        data: { label: 'Age Check', condition: 'age >= 50', trueLabel: '50+', falseLabel: '40-49' },
-      });
-      aiResponse += "Added age-based decision point. ";
+    // Handle high-risk branch addition
+    if (input.includes('high-risk') || input.includes('family history')) {
+      const riskNodes = [
+        {
+          id: `knowledge_risk_${Date.now()}`,
+          type: 'knowledge',
+          position: { x: 50, y: 350 },
+          data: {
+            label: 'Check Family History',
+            category: '🧠 Knowledge',
+            config: {
+              dataSource: 'health_data_engine',
+              check: 'breast_cancer_family_history'
+            }
+          }
+        },
+        {
+          id: `risk_check_${Date.now()}`,
+          type: 'decision',
+          position: { x: 200, y: 350 },
+          data: {
+            label: 'Risk Assessment',
+            category: '🤔 Decisions',
+            config: {
+              condition: 'family_history',
+              branches: [
+                { value: 'high_risk', label: 'High Risk' },
+                { value: 'normal', label: 'Normal Risk' }
+              ]
+            }
+          }
+        },
+        {
+          id: `phone_urgent_${Date.now()}`,
+          type: 'outreach',
+          position: { x: 400, y: 450 },
+          data: {
+            label: 'Urgent Phone Call',
+            category: '💬 Outreach',
+            config: {
+              channel: 'phone',
+              callType: 'live_agent',
+              priority: 'high'
+            }
+          }
+        }
+      ];
+
+      newNodes = [...newNodes, ...riskNodes];
+      aiResponse += " Added high-risk pathway with family history check and urgent phone outreach.";
     }
 
-    if (input.includes('sms')) {
-      newNodes.push({
-        id: `action-sms-${Date.now()}`,
-        type: 'action',
-        position: { x: 250, y: 250 },
-        data: { label: 'Send SMS', actionType: 'sms', message: 'Healthcare reminder' },
-      });
-      aiResponse += "Added SMS action. ";
-    }
-
-    if (input.includes('wait') || input.includes('days')) {
-      const waitMatch = input.match(/wait (\d+) days?/);
-      const days = waitMatch ? waitMatch[1] : '5';
-      newNodes.push({
-        id: `wait-${Date.now()}`,
-        type: 'wait',
-        position: { x: 400, y: 250 },
-        data: { label: `Wait ${days} Days`, duration: parseInt(days) },
-      });
-      aiResponse += `Added ${days}-day wait period. `;
-    }
-
-    if (input.includes('phone') || input.includes('call')) {
-      newNodes.push({
-        id: `action-phone-${Date.now()}`,
-        type: 'action',
-        position: { x: 550, y: 250 },
-        data: { label: 'Phone Call', actionType: 'phone', message: 'Follow-up call' },
-      });
-      aiResponse += "Added phone call action. ";
-    }
-
-    // Add new nodes to the flow
+    // Add new nodes and edges to the flow
     if (newNodes.length > 0) {
-      setNodes(prev => [...prev, ...newNodes]);
+      setNodes(prev => [...prev.filter(n => n.id !== 'start'), ...newNodes]);
+      if (newEdges.length > 0) {
+        setEdges(prev => [...prev, ...newEdges]);
+      }
     } else {
       aiResponse = "I didn't recognize specific actions in your message. You can drag nodes from the palette below to build your workflow manually.";
     }
@@ -169,14 +349,50 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
 
   const getDefaultNodeData = (nodeType: string) => {
     switch (nodeType) {
+      case 'outreach':
+        return { 
+          label: 'Send Message', 
+          category: '💬 Outreach',
+          config: { channel: 'sms', template: 'default_reminder' }
+        };
       case 'action':
-        return { label: 'New Action', actionType: 'sms', message: 'Default message' };
+        return { 
+          label: 'Schedule Appointment', 
+          category: '📅 Actions',
+          config: { appointmentType: 'general', schedulingMethod: 'auto' }
+        };
       case 'decision':
-        return { label: 'Decision Point', condition: 'age >= 50', trueLabel: 'Yes', falseLabel: 'No' };
+        return { 
+          label: 'Check Condition', 
+          category: '🤔 Decisions',
+          config: { 
+            condition: 'age', 
+            branches: [
+              { operator: '>=', value: 50, label: 'Over 50' },
+              { operator: '<', value: 50, label: 'Under 50' }
+            ]
+          }
+        };
       case 'wait':
-        return { label: 'Wait Period', duration: 3 };
+        return { 
+          label: 'Wait Period', 
+          category: '⏰ Wait',
+          config: { duration: 3, unit: 'days' }
+        };
+      case 'knowledge':
+        return {
+          label: 'Check Data',
+          category: '🧠 Knowledge',
+          config: { dataSource: 'health_data_engine', check: 'previous_screening' }
+        };
+      case 'end':
+        return {
+          label: 'End Campaign',
+          category: '✅ End',
+          config: { outcome: 'success' }
+        };
       default:
-        return { label: 'New Node' };
+        return { label: 'New Node', category: '🎯 Triggers' };
     }
   };
 
@@ -246,38 +462,56 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => addNodeFromPalette('action')}
-                  className="h-12 flex-col gap-1"
+                  onClick={() => addNodeFromPalette('outreach')}
+                  className="h-12 flex-col gap-1 text-xs"
                 >
                   <Plus className="h-4 w-4" />
-                  Action
+                  💬 Outreach
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => addNodeFromPalette('decision')}
-                  className="h-12 flex-col gap-1"
+                  className="h-12 flex-col gap-1 text-xs"
                 >
                   <Plus className="h-4 w-4" />
-                  Decision
+                  🤔 Decision
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => addNodeFromPalette('wait')}
-                  className="h-12 flex-col gap-1"
+                  className="h-12 flex-col gap-1 text-xs"
                 >
                   <Plus className="h-4 w-4" />
-                  Wait
+                  ⏰ Wait
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => addNodeFromPalette('action')}
-                  className="h-12 flex-col gap-1"
+                  className="h-12 flex-col gap-1 text-xs"
                 >
                   <Plus className="h-4 w-4" />
-                  Phone
+                  📅 Action
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => addNodeFromPalette('knowledge')}
+                  className="h-12 flex-col gap-1 text-xs"
+                >
+                  <Plus className="h-4 w-4" />
+                  🧠 Knowledge
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => addNodeFromPalette('end')}
+                  className="h-12 flex-col gap-1 text-xs"
+                >
+                  <Plus className="h-4 w-4" />
+                  ✅ End
                 </Button>
               </div>
             </CardContent>
