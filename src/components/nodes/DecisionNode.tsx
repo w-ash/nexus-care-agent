@@ -1,7 +1,7 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { Badge } from '@/components/ui/badge';
-import { GitBranch, Users, Activity, UserCheck } from 'lucide-react';
+import { GitBranch, Users, Activity, UserCheck, Edit2 } from 'lucide-react';
 
 interface DecisionNodeData {
   label: string;
@@ -19,9 +19,10 @@ interface DecisionNodeData {
 interface DecisionNodeProps {
   data: DecisionNodeData;
   selected?: boolean;
+  onEdit?: () => void;
 }
 
-const DecisionNode: React.FC<DecisionNodeProps> = ({ data, selected }) => {
+const DecisionNode: React.FC<DecisionNodeProps> = ({ data, selected, onEdit }) => {
   const getIcon = () => {
     switch (data.config?.condition) {
       case 'age': return <Users className="h-3 w-3 text-white" />;
@@ -47,7 +48,7 @@ const DecisionNode: React.FC<DecisionNodeProps> = ({ data, selected }) => {
   const labels = getBranchLabels();
 
   return (
-    <div className={`bg-card border-2 rounded-lg px-4 py-3 min-w-[160px] shadow-lg transition-all ${
+    <div className={`relative bg-card border-2 rounded-lg px-4 py-3 min-w-[160px] shadow-lg transition-all ${
       selected ? 'border-primary shadow-primary/20' : 'border-border hover:border-primary/50'
     }`}>
       <Handle
@@ -55,6 +56,16 @@ const DecisionNode: React.FC<DecisionNodeProps> = ({ data, selected }) => {
         position={Position.Top}
         className="w-3 h-3 bg-primary border-2 border-background"
       />
+      
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onEdit?.();
+        }}
+        className="absolute top-2 right-2 p-1 rounded hover:bg-muted transition-colors opacity-60 hover:opacity-100"
+      >
+        <Edit2 className="h-3 w-3" />
+      </button>
       
       <div className="flex items-center gap-2 mb-2">
         <div className="w-6 h-6 rounded-full bg-violet-500 flex items-center justify-center">

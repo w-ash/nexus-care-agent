@@ -30,15 +30,16 @@ import DecisionNode from './nodes/DecisionNode';
 import WaitNode from './nodes/WaitNode';
 import KnowledgeNode from './nodes/KnowledgeNode';
 import EndNode from './nodes/EndNode';
+import NodeConfigurationModal from './NodeConfigurationModal';
 
 const nodeTypes = {
-  trigger: TriggerNode,
-  outreach: OutreachNode,
-  action: ActionNode,
-  decision: DecisionNode,
-  wait: WaitNode,
-  knowledge: KnowledgeNode,
-  end: EndNode,
+  trigger: (props: any) => <TriggerNode {...props} onEdit={() => props.data.onEdit?.(props.id)} />,
+  outreach: (props: any) => <OutreachNode {...props} onEdit={() => props.data.onEdit?.(props.id)} />,
+  action: (props: any) => <ActionNode {...props} onEdit={() => props.data.onEdit?.(props.id)} />,
+  decision: (props: any) => <DecisionNode {...props} onEdit={() => props.data.onEdit?.(props.id)} />,
+  wait: (props: any) => <WaitNode {...props} onEdit={() => props.data.onEdit?.(props.id)} />,
+  knowledge: (props: any) => <KnowledgeNode {...props} onEdit={() => props.data.onEdit?.(props.id)} />,
+  end: (props: any) => <EndNode {...props} onEdit={() => props.data.onEdit?.(props.id)} />,
 };
 
 const initialNodes: Node[] = [
@@ -52,7 +53,8 @@ const initialNodes: Node[] = [
       config: {
         gapType: 'General',
         daysOverdue: 0
-      }
+      },
+      onEdit: (nodeId: string) => {} // Will be replaced in component
     },
   },
 ];
@@ -67,11 +69,20 @@ interface CampaignBuilderProps {
 const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [selectedNode, setSelectedNode] = useState<string | null>(null);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [chatInput, setChatInput] = useState('');
   const [chatHistory, setChatHistory] = useState<Array<{ type: 'user' | 'ai', message: string }>>([
     { type: 'ai', message: 'Hi! I can help you create a campaign workflow. Try: "Create a mammogram screening campaign for women 40-74 who are overdue. For women 40-49, send educational SMS first, then scheduling help. For 50+, go straight to scheduling. Try SMS, wait 5 days, then phone call."' }
   ]);
+
+  // Update initial nodes with edit callback after component mounts
+  React.useEffect(() => {
+    setNodes(nodes => nodes.map(node => ({
+      ...node,
+      data: { ...node.data, onEdit: handleNodeEdit }
+    })));
+  }, []);
 
   // Campaign configuration state
   const [campaignName, setCampaignName] = useState('');
@@ -91,8 +102,16 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
   );
 
   const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
-    setSelectedNode(node.id);
+    // Node click disabled - editing only through pencil icon
   }, []);
+
+  const handleNodeEdit = useCallback((nodeId: string) => {
+    const node = nodes.find(n => n.id === nodeId);
+    if (node) {
+      setSelectedNode(node);
+      setIsModalOpen(true);
+    }
+  }, [nodes]);
 
   const updateNodeConfig = (nodeId: string, newConfig: any) => {
     setNodes(prev => prev.map(node => 
@@ -117,6 +136,13 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
         ? { ...node, data: { ...node.data, label: newLabel } }
         : node
     ));
+  };
+
+  const handleModalSave = (nodeId: string, label: string, config: any) => {
+    updateNodeLabel(nodeId, label);
+    updateNodeConfig(nodeId, config);
+    setIsModalOpen(false);
+    setSelectedNode(null);
   };
 
   const handleChatSubmit = (e: React.FormEvent) => {
@@ -366,7 +392,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
       id: `${nodeType}-${Date.now()}`,
       type: nodeType,
       position: { x: Math.random() * 300 + 100, y: Math.random() * 200 + 200 },
-      data: getDefaultNodeData(nodeType),
+      data: { ...getDefaultNodeData(nodeType), onEdit: handleNodeEdit },
     };
     setNodes(prev => [...prev, newNode]);
   };
@@ -538,152 +564,6 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
 
         {/* Right Panel */}
         <div className="w-96 border-l bg-card flex flex-col">
-          {/* Node Configuration Panel */}
-          {selectedNode && (() => {
-            const node = nodes.find(n => n.id === selectedNode);
-            if (!node) return null;
-            
-            return (
-              <div className="p-4 border-b bg-muted/10">
-                <h3 className="font-medium mb-3">Configure Node</h3>
-                <div className="space-y-3">
-                  <div>
-                    <Label htmlFor="node-label">Node Label</Label>
-                    <Input
-                      id="node-label"
-                      value={typeof node.data.label === 'string' ? node.data.label : ''}
-                      onChange={(e) => updateNodeLabel(selectedNode, e.target.value)}
-                      className="mt-1"
-                    />
-                  </div>
-                  
-                  {/* Outreach Node Configuration */}
-                  {node.type === 'outreach' && (
-                    <>
-                      <div>
-                        <Label htmlFor="channel">Channel Type</Label>
-                        <Select 
-                          value={(node.data.config as any)?.channel || 'sms'}
-                          onValueChange={(value) => updateNodeConfig(selectedNode, { channel: value })}
-                        >
-                          <SelectTrigger className="mt-1">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="sms">SMS</SelectItem>
-                            <SelectItem value="phone">Phone</SelectItem>
-                            <SelectItem value="email">Email</SelectItem>
-                            <SelectItem value="mail">Direct Mail</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      {(node.data.config as any)?.channel === 'sms' && (
-                        <div>
-                          <Label htmlFor="time-of-day">Time of Day</Label>
-                          <Select 
-                            value={(node.data.config as any)?.timeOfDay || 'morning'}
-                            onValueChange={(value) => updateNodeConfig(selectedNode, { timeOfDay: value })}
-                          >
-                            <SelectTrigger className="mt-1">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="morning">Morning</SelectItem>
-                              <SelectItem value="afternoon">Afternoon</SelectItem>
-                              <SelectItem value="evening">Evening</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      )}
-                      
-                      {(node.data.config as any)?.channel === 'phone' && (
-                        <>
-                          <div>
-                            <Label htmlFor="call-type">Call Type</Label>
-                            <Select 
-                              value={(node.data.config as any)?.callType || 'automated'}
-                              onValueChange={(value) => updateNodeConfig(selectedNode, { callType: value })}
-                            >
-                              <SelectTrigger className="mt-1">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="automated">Automated</SelectItem>
-                                <SelectItem value="live_agent">Live Agent</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div>
-                            <Label htmlFor="max-attempts">Max Attempts</Label>
-                            <Input
-                              id="max-attempts"
-                              type="number"
-                              value={(node.data.config as any)?.maxAttempts || 3}
-                              onChange={(e) => updateNodeConfig(selectedNode, { maxAttempts: parseInt(e.target.value) })}
-                              className="mt-1"
-                            />
-                          </div>
-                        </>
-                      )}
-                      
-                      <div>
-                        <Label htmlFor="template">Template</Label>
-                        <Input
-                          id="template"
-                          value={(node.data.config as any)?.template || ''}
-                          onChange={(e) => updateNodeConfig(selectedNode, { template: e.target.value })}
-                          placeholder="e.g., reminder_friendly"
-                          className="mt-1"
-                        />
-                      </div>
-                    </>
-                  )}
-                  
-                  {/* Wait Node Configuration */}
-                  {node.type === 'wait' && (
-                    <>
-                      <div>
-                        <Label htmlFor="duration">Duration</Label>
-                        <Input
-                          id="duration"
-                          type="number"
-                          value={(node.data.config as any)?.duration || 1}
-                          onChange={(e) => updateNodeConfig(selectedNode, { duration: parseInt(e.target.value) })}
-                          className="mt-1"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="unit">Unit</Label>
-                        <Select 
-                          value={(node.data.config as any)?.unit || 'days'}
-                          onValueChange={(value) => updateNodeConfig(selectedNode, { unit: value })}
-                        >
-                          <SelectTrigger className="mt-1">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="hours">Hours</SelectItem>
-                            <SelectItem value="days">Days</SelectItem>
-                            <SelectItem value="weeks">Weeks</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </>
-                  )}
-                  
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => setSelectedNode(null)}
-                    className="w-full mt-3"
-                  >
-                    Close Configuration
-                  </Button>
-                </div>
-              </div>
-            );
-          })()}
 
           {/* Chat Interface */}
           <div className="flex-1 flex flex-col">
@@ -800,6 +680,16 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
           </div>
         </div>
       </div>
+
+      <NodeConfigurationModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedNode(null);
+        }}
+        node={selectedNode}
+        onSave={handleModalSave}
+      />
     </div>
   );
 };

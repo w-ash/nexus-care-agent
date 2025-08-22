@@ -1,7 +1,7 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, AlertTriangle, FileEdit, UserPlus } from 'lucide-react';
+import { Calendar, AlertTriangle, FileEdit, UserPlus, Edit2 } from 'lucide-react';
 
 interface ActionNodeData {
   label: string;
@@ -21,9 +21,10 @@ interface ActionNodeData {
 interface ActionNodeProps {
   data: ActionNodeData;
   selected?: boolean;
+  onEdit?: () => void;
 }
 
-const ActionNode: React.FC<ActionNodeProps> = ({ data, selected }) => {
+const ActionNode: React.FC<ActionNodeProps> = ({ data, selected, onEdit }) => {
   const getIcon = () => {
     if (data.config?.appointmentType) return <Calendar className="h-3 w-3 text-white" />;
     if (data.config?.escalationType) return <AlertTriangle className="h-3 w-3 text-white" />;
@@ -39,7 +40,7 @@ const ActionNode: React.FC<ActionNodeProps> = ({ data, selected }) => {
   };
 
   return (
-    <div className={`bg-card border-2 rounded-lg px-4 py-3 min-w-[160px] shadow-lg transition-all ${
+    <div className={`relative bg-card border-2 rounded-lg px-4 py-3 min-w-[160px] shadow-lg transition-all ${
       selected ? 'border-primary shadow-primary/20' : 'border-border hover:border-primary/50'
     }`}>
       <Handle
@@ -47,6 +48,16 @@ const ActionNode: React.FC<ActionNodeProps> = ({ data, selected }) => {
         position={Position.Top}
         className="w-3 h-3 bg-primary border-2 border-background"
       />
+      
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onEdit?.();
+        }}
+        className="absolute top-2 right-2 p-1 rounded hover:bg-muted transition-colors opacity-60 hover:opacity-100"
+      >
+        <Edit2 className="h-3 w-3" />
+      </button>
       
       <div className="flex items-center gap-2 mb-2">
         <div className={`w-6 h-6 rounded-full ${getColor()} flex items-center justify-center`}>
