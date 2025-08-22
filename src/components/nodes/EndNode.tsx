@@ -1,7 +1,7 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, XCircle, Clock, Flag, Edit2 } from 'lucide-react';
+import { Edit2 } from 'lucide-react';
 
 interface EndNodeData {
   label: string;
@@ -19,26 +19,6 @@ interface EndNodeProps {
 }
 
 const EndNode: React.FC<EndNodeProps> = ({ data, selected, onEdit }) => {
-  const getIcon = () => {
-    switch (data.config?.outcome) {
-      case 'success': return <CheckCircle className="h-3 w-3 text-white" />;
-      case 'incomplete': return <XCircle className="h-3 w-3 text-white" />;
-      case 'timeout': return <Clock className="h-3 w-3 text-white" />;
-      case 'escalated': return <Flag className="h-3 w-3 text-white" />;
-      default: return <CheckCircle className="h-3 w-3 text-white" />;
-    }
-  };
-
-  const getColor = () => {
-    switch (data.config?.outcome) {
-      case 'success': return 'bg-emerald-500';
-      case 'incomplete': return 'bg-slate-500';
-      case 'timeout': return 'bg-orange-500';
-      case 'escalated': return 'bg-yellow-500';
-      default: return 'bg-slate-500';
-    }
-  };
-
   return (
     <div className={`relative bg-card border-2 rounded-lg px-4 py-3 min-w-[160px] shadow-lg transition-all ${
       selected ? 'border-primary shadow-primary/20' : 'border-border hover:border-primary/50'
@@ -59,28 +39,26 @@ const EndNode: React.FC<EndNodeProps> = ({ data, selected, onEdit }) => {
         <Edit2 className="h-3 w-3" />
       </button>
       
-      <div className="flex items-center gap-2 mb-2">
-        <div className={`w-6 h-6 rounded-full ${getColor()} flex items-center justify-center`}>
-          {getIcon()}
+      <div className="mb-3">
+        <Badge variant="secondary" className="text-xs font-medium mb-2">✅ End</Badge>
+        <div className="text-sm font-semibold text-foreground leading-tight">
+          {data.label}
         </div>
-        <Badge variant="secondary" className="text-xs font-medium">✅ End</Badge>
       </div>
       
-      <div className="text-sm font-semibold text-foreground mb-1">
-        {data.label}
+      <div className="space-y-1">
+        {data.config?.outcome && (
+          <div className="text-xs text-muted-foreground">
+            {data.config.outcome.replace('_', ' ')}
+          </div>
+        )}
+        
+        {data.config?.metric && (
+          <div className="text-xs text-muted-foreground">
+            {data.config.metric.replace(/_/g, ' ')}
+          </div>
+        )}
       </div>
-      
-      {data.config?.outcome && (
-        <div className="text-xs text-muted-foreground mb-1">
-          {data.config.outcome.replace('_', ' ')}
-        </div>
-      )}
-      
-      {data.config?.metric && (
-        <div className="text-xs text-muted-foreground">
-          {data.config.metric.replace(/_/g, ' ')}
-        </div>
-      )}
     </div>
   );
 };
