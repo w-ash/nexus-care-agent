@@ -203,7 +203,7 @@ const ExpandableCampaignCard: React.FC<ExpandableCampaignCardProps> = ({
                   <div
                     key={member.id}
                     className="flex items-center justify-between p-3 bg-background rounded-lg border hover:border-primary/50 transition-colors cursor-pointer group"
-                    onClick={() => onViewMember?.(member.id)}
+                    onClick={() => onViewMember?.('maria')}
                   >
                     <div className="flex items-center gap-3 flex-1">
                       <div className="flex-1">

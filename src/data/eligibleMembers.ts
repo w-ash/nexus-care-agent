@@ -11,105 +11,17 @@ export interface EligibleMember {
 }
 
 export const mockEligibleMembers: Record<string, EligibleMember[]> = {
-  'mammogram-screening-campaign': [
+  'campaign-1': [ // Diabetes HbA1c Testing
     {
       id: 'maria-rodriguez',
       name: 'Maria Rodriguez',
       age: 52,
       riskLevel: 'medium',
-      gapType: 'Mammogram',
-      daysOverdue: 45,
+      gapType: 'HbA1c',
+      daysOverdue: 95,
       lastContact: new Date('2025-01-15'),
       preferredChannel: 'sms'
     },
-    {
-      id: 'sarah-johnson',
-      name: 'Sarah Johnson',
-      age: 48,
-      riskLevel: 'high',
-      gapType: 'Mammogram',
-      daysOverdue: 120,
-      lastContact: new Date('2025-01-10'),
-      preferredChannel: 'email'
-    },
-    {
-      id: 'jessica-chen',
-      name: 'Jessica Chen',
-      age: 55,
-      riskLevel: 'low',
-      gapType: 'Mammogram',
-      daysOverdue: 30,
-      lastContact: new Date('2025-01-18'),
-      preferredChannel: 'phone'
-    },
-    {
-      id: 'amanda-williams',
-      name: 'Amanda Williams',
-      age: 41,
-      riskLevel: 'medium',
-      gapType: 'Mammogram',
-      daysOverdue: 67,
-      preferredChannel: 'sms'
-    },
-    {
-      id: 'rachel-brown',
-      name: 'Rachel Brown',
-      age: 49,
-      riskLevel: 'high',
-      gapType: 'Mammogram',
-      daysOverdue: 89,
-      lastContact: new Date('2025-01-12'),
-      preferredChannel: 'email'
-    },
-    {
-      id: 'emily-davis',
-      name: 'Emily Davis',
-      age: 53,
-      riskLevel: 'low',
-      gapType: 'Mammogram',
-      daysOverdue: 22,
-      preferredChannel: 'sms'
-    },
-    {
-      id: 'nicole-miller',
-      name: 'Nicole Miller',
-      age: 46,
-      riskLevel: 'medium',
-      gapType: 'Mammogram',
-      daysOverdue: 55,
-      lastContact: new Date('2025-01-16'),
-      preferredChannel: 'phone'
-    },
-    {
-      id: 'lisa-wilson',
-      name: 'Lisa Wilson',
-      age: 50,
-      riskLevel: 'high',
-      gapType: 'Mammogram',
-      daysOverdue: 98,
-      preferredChannel: 'email'
-    },
-    {
-      id: 'michelle-garcia',
-      name: 'Michelle Garcia',
-      age: 44,
-      riskLevel: 'low',
-      gapType: 'Mammogram',
-      daysOverdue: 35,
-      lastContact: new Date('2025-01-14'),
-      preferredChannel: 'sms'
-    },
-    {
-      id: 'stephanie-martinez',
-      name: 'Stephanie Martinez',
-      age: 47,
-      riskLevel: 'medium',
-      gapType: 'Mammogram',
-      daysOverdue: 71,
-      preferredChannel: 'phone'
-    }
-  ],
-  'diabetes-hba1c-campaign': [
     {
       id: 'robert-smith',
       name: 'Robert Smith',
@@ -207,13 +119,101 @@ export const mockEligibleMembers: Record<string, EligibleMember[]> = {
       preferredChannel: 'sms'
     }
   ],
-  'colonoscopy-screening-campaign': [
+  'campaign-2': [ // Blood Pressure Management
+    {
+      id: 'sarah-johnson',
+      name: 'Sarah Johnson',
+      age: 48,
+      riskLevel: 'high',
+      gapType: 'Blood Pressure',
+      daysOverdue: 120,
+      lastContact: new Date('2025-01-10'),
+      preferredChannel: 'email'
+    },
+    {
+      id: 'jessica-chen',
+      name: 'Jessica Chen',
+      age: 55,
+      riskLevel: 'low',
+      gapType: 'Blood Pressure',
+      daysOverdue: 30,
+      lastContact: new Date('2025-01-18'),
+      preferredChannel: 'phone'
+    },
+    {
+      id: 'amanda-williams',
+      name: 'Amanda Williams',
+      age: 41,
+      riskLevel: 'medium',
+      gapType: 'Blood Pressure',
+      daysOverdue: 67,
+      preferredChannel: 'sms'
+    },
+    {
+      id: 'rachel-brown',
+      name: 'Rachel Brown',
+      age: 49,
+      riskLevel: 'high',
+      gapType: 'Blood Pressure',
+      daysOverdue: 89,
+      lastContact: new Date('2025-01-12'),
+      preferredChannel: 'email'
+    },
+    {
+      id: 'emily-davis',
+      name: 'Emily Davis',
+      age: 53,
+      riskLevel: 'low',
+      gapType: 'Blood Pressure',
+      daysOverdue: 22,
+      preferredChannel: 'sms'
+    },
+    {
+      id: 'nicole-miller',
+      name: 'Nicole Miller',
+      age: 46,
+      riskLevel: 'medium',
+      gapType: 'Blood Pressure',
+      daysOverdue: 55,
+      lastContact: new Date('2025-01-16'),
+      preferredChannel: 'phone'
+    },
+    {
+      id: 'lisa-wilson',
+      name: 'Lisa Wilson',
+      age: 50,
+      riskLevel: 'high',
+      gapType: 'Blood Pressure',
+      daysOverdue: 98,
+      preferredChannel: 'email'
+    },
+    {
+      id: 'michelle-garcia',
+      name: 'Michelle Garcia',
+      age: 44,
+      riskLevel: 'low',
+      gapType: 'Blood Pressure',
+      daysOverdue: 35,
+      lastContact: new Date('2025-01-14'),
+      preferredChannel: 'sms'
+    }
+  ],
+  'campaign-3': [ // Annual Flu Shot
+    {
+      id: 'stephanie-martinez',
+      name: 'Stephanie Martinez',
+      age: 47,
+      riskLevel: 'medium',
+      gapType: 'Flu Shot',
+      daysOverdue: 71,
+      preferredChannel: 'phone'
+    },
     {
       id: 'kevin-lee',
       name: 'Kevin Lee',
       age: 51,
       riskLevel: 'medium',
-      gapType: 'Colonoscopy',
+      gapType: 'Flu Shot',
       daysOverdue: 245,
       lastContact: new Date('2025-01-09'),
       preferredChannel: 'email'
@@ -223,7 +223,7 @@ export const mockEligibleMembers: Record<string, EligibleMember[]> = {
       name: 'Mark Gonzalez',
       age: 57,
       riskLevel: 'high',
-      gapType: 'Colonoscopy',
+      gapType: 'Flu Shot',
       daysOverdue: 412,
       preferredChannel: 'phone'
     },
@@ -232,7 +232,7 @@ export const mockEligibleMembers: Record<string, EligibleMember[]> = {
       name: 'Steven Robinson',
       age: 63,
       riskLevel: 'low',
-      gapType: 'Colonoscopy',
+      gapType: 'Flu Shot',
       daysOverdue: 189,
       lastContact: new Date('2025-01-16'),
       preferredChannel: 'sms'
@@ -242,7 +242,7 @@ export const mockEligibleMembers: Record<string, EligibleMember[]> = {
       name: 'Paul Clark',
       age: 54,
       riskLevel: 'medium',
-      gapType: 'Colonoscopy',
+      gapType: 'Flu Shot',
       daysOverdue: 298,
       preferredChannel: 'email'
     },
@@ -251,7 +251,7 @@ export const mockEligibleMembers: Record<string, EligibleMember[]> = {
       name: 'Andrew Rodriguez',
       age: 48,
       riskLevel: 'high',
-      gapType: 'Colonoscopy',
+      gapType: 'Flu Shot',
       daysOverdue: 356,
       lastContact: new Date('2025-01-07'),
       preferredChannel: 'phone'
@@ -261,7 +261,7 @@ export const mockEligibleMembers: Record<string, EligibleMember[]> = {
       name: 'Joshua Lewis',
       age: 52,
       riskLevel: 'low',
-      gapType: 'Colonoscopy',
+      gapType: 'Flu Shot',
       daysOverdue: 167,
       preferredChannel: 'sms'
     },
@@ -270,37 +270,9 @@ export const mockEligibleMembers: Record<string, EligibleMember[]> = {
       name: 'Kenneth Walker',
       age: 59,
       riskLevel: 'medium',
-      gapType: 'Colonoscopy',
+      gapType: 'Flu Shot',
       daysOverdue: 278,
       lastContact: new Date('2025-01-12'),
-      preferredChannel: 'email'
-    },
-    {
-      id: 'brian-hall',
-      name: 'Brian Hall',
-      age: 55,
-      riskLevel: 'high',
-      gapType: 'Colonoscopy',
-      daysOverdue: 389,
-      preferredChannel: 'phone'
-    },
-    {
-      id: 'edward-allen',
-      name: 'Edward Allen',
-      age: 61,
-      riskLevel: 'low',
-      gapType: 'Colonoscopy',
-      daysOverdue: 203,
-      lastContact: new Date('2025-01-18'),
-      preferredChannel: 'sms'
-    },
-    {
-      id: 'ronald-young',
-      name: 'Ronald Young',
-      age: 56,
-      riskLevel: 'medium',
-      gapType: 'Colonoscopy',
-      daysOverdue: 312,
       preferredChannel: 'email'
     }
   ]
