@@ -86,7 +86,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
   const [priority, setPriority] = useState('Medium');
   const [estimatedROI, setEstimatedROI] = useState('380');
   const [bundlingRules, setBundlingRules] = useState({
-    selectedCampaigns: ['HbA1c Testing Campaign', 'Flu Shot Initiative', 'Mammogram Outreach']
+    selectedCampaigns: []
   });
   const [splitPercentage, setSplitPercentage] = useState([25]);
 
