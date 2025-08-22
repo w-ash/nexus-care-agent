@@ -531,21 +531,21 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
                      {Object.entries(NODE_CATEGORIES).map(([category, nodes]) => (
                        <div key={category}>
                          <h4 className="text-xs font-medium text-muted-foreground mb-2">{category}</h4>
-                         <div className="grid grid-cols-2 gap-1">
+                         <div className="space-y-1">
                            {nodes.map((node) => (
                              <Button
                                key={node.type}
                                variant="outline"
                                size="sm"
-                                onClick={() => {
-                                  addNodeFromPalette(node.type as NodeType);
-                                  setIsPaletteOpen(false);
-                                }}
-                               className="h-10 flex-col gap-0.5 text-xs hover:bg-primary/5 hover:border-primary/20 transition-colors"
+                               onClick={() => {
+                                 addNodeFromPalette(node.type as NodeType);
+                                 setIsPaletteOpen(false);
+                               }}
+                               className="w-full h-10 flex items-center justify-start gap-3 px-3 text-sm hover:bg-primary/5 hover:border-primary/20 transition-colors"
                                title={node.description}
                              >
-                               <span className="text-sm">{node.emoji}</span>
-                               <span className="truncate text-xs">{node.label.split(' ')[0]}</span>
+                               <span className="text-base flex-shrink-0">{node.emoji}</span>
+                               <span className="text-left truncate">{node.label}</span>
                              </Button>
                            ))}
                          </div>
