@@ -474,7 +474,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-screen bg-background flex flex-col">
       {/* Header */}
       <div className="border-b bg-card px-6 py-4">
         <div className="flex items-center gap-4">
@@ -485,10 +485,10 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
           <h1 className="text-2xl font-semibold">Campaign Builder</h1>
         </div>
       </div>
-
-      <div className="flex h-[calc(100vh-80px)]">
+      {/* Main Content */}
+      <div className="flex flex-1 overflow-hidden">
         {/* Left Panel - Campaign Configuration */}
-        <div className="w-80 border-r bg-card">
+        <div className="w-80 border-r bg-card flex flex-col">
           <CampaignConfiguration
             campaignName={campaignName}
             setCampaignName={setCampaignName}
@@ -506,7 +506,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
         </div>
 
         {/* Center Panel - React Flow Canvas */}
-        <div className="flex-1 relative">
+        <div className="flex-1 relative overflow-hidden">
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -621,7 +621,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
         </div>
 
         {/* Right Panel - AI Assistant */}
-        <div className="w-96 border-l bg-card flex flex-col max-h-full">
+        <div className="w-96 border-l bg-card flex flex-col overflow-hidden">
           {/* Chat Interface */}
           <div className="flex-1 flex flex-col">
             {/* Header */}
