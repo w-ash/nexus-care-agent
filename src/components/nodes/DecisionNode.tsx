@@ -55,11 +55,6 @@ const DecisionNode: React.FC<DecisionNodeProps> = ({ data, selected }) => {
         position={Position.Top}
         className="w-3 h-3 bg-primary border-2 border-background"
       />
-      <Handle
-        type="target"
-        position={Position.Left}
-        className="w-3 h-3 bg-primary border-2 border-background"
-      />
       
       <div className="flex items-center gap-2 mb-2">
         <div className="w-6 h-6 rounded-full bg-violet-500 flex items-center justify-center">
@@ -96,20 +91,6 @@ const DecisionNode: React.FC<DecisionNodeProps> = ({ data, selected }) => {
         id="false"
         className="w-3 h-3 bg-rose-500 border-2 border-background"
         style={{ left: '75%' }}
-      />
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="right-true"
-        className="w-3 h-3 bg-emerald-500 border-2 border-background"
-        style={{ top: '35%' }}
-      />
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="right-false"
-        className="w-3 h-3 bg-rose-500 border-2 border-background"
-        style={{ top: '65%' }}
       />
     </div>
   );
