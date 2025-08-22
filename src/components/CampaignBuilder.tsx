@@ -205,7 +205,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
         {
           id: 'trigger_mammogram',
           type: 'gap_trigger',
-          position: { x: 400, y: 50 },
+          position: { x: 400, y: 100 },
           data: {
             label: 'Mammogram Overdue',
             config: {
@@ -219,7 +219,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
         {
           id: 'age_check',
           type: 'age_check',
-          position: { x: 400, y: 150 },
+          position: { x: 400, y: 300 },
           data: {
             label: 'Age Group Check',
             config: {
@@ -233,7 +233,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
         {
           id: 'sms_education',
           type: 'sms',
-          position: { x: 250, y: 250 },
+          position: { x: 250, y: 500 },
           data: {
             label: 'Educational SMS',
             config: {
@@ -245,7 +245,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
         {
           id: 'wait_edu',
           type: 'wait',
-          position: { x: 250, y: 350 },
+          position: { x: 250, y: 700 },
           data: {
             label: 'Wait 2 Days',
             config: { duration: 2, unit: 'days' }
@@ -254,7 +254,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
         {
           id: 'sms_schedule_young',
           type: 'sms',
-          position: { x: 250, y: 450 },
+          position: { x: 250, y: 900 },
           data: {
             label: 'Scheduling SMS',
             config: {
@@ -265,7 +265,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
         {
           id: 'sms_schedule_older',
           type: 'sms',
-          position: { x: 550, y: 250 },
+          position: { x: 550, y: 500 },
           data: {
             label: 'Scheduling SMS',
             config: {
@@ -276,7 +276,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
         {
           id: 'wait_main',
           type: 'wait',
-          position: { x: 400, y: 550 },
+          position: { x: 400, y: 1100 },
           data: {
             label: 'Wait 5 Days',
             config: { duration: 5, unit: 'days' }
@@ -285,7 +285,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
         {
           id: 'phone_followup',
           type: 'phone',
-          position: { x: 400, y: 650 },
+          position: { x: 400, y: 1300 },
           data: {
             label: 'Phone Follow-up',
             config: {
@@ -296,7 +296,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
         {
           id: 'response_check',
           type: 'response_check',
-          position: { x: 400, y: 750 },
+          position: { x: 400, y: 1500 },
           data: {
             label: 'Response Check',
             config: {
@@ -308,7 +308,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
         {
           id: 'end_success',
           type: 'success',
-          position: { x: 250, y: 850 },
+          position: { x: 250, y: 1700 },
           data: {
             label: 'Campaign Complete',
             config: { outcome: 'appointment_scheduled' }
@@ -317,7 +317,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
         {
           id: 'end_incomplete',
           type: 'incomplete',
-          position: { x: 550, y: 850 },
+          position: { x: 550, y: 1700 },
           data: {
             label: 'Max Attempts',
             config: { 
@@ -353,7 +353,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
         {
           id: `knowledge_risk_${Date.now()}`,
           type: 'history_check',
-          position: { x: 50, y: 350 },
+          position: { x: 50, y: 700 },
           data: {
             label: 'Check Family History',
             config: {
@@ -365,7 +365,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
         {
           id: `risk_check_${Date.now()}`,
           type: 'risk_check',
-          position: { x: 200, y: 350 },
+          position: { x: 200, y: 700 },
           data: {
             label: 'Risk Assessment',
             config: {
@@ -377,7 +377,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
         {
           id: `phone_urgent_${Date.now()}`,
           type: 'phone',
-          position: { x: 400, y: 450 },
+          position: { x: 400, y: 900 },
           data: {
             label: 'Urgent Phone Call',
             config: {

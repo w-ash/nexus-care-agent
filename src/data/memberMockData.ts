@@ -73,7 +73,7 @@ export const getInitialJourneyState = (): JourneyState => {
       {
         id: 'trigger_hba1c',
         type: 'gap_trigger',
-        position: { x: 400, y: 50 },
+        position: { x: 400, y: 100 },
         data: {
           label: 'HbA1c Overdue',
           state: 'completed',
@@ -87,7 +87,7 @@ export const getInitialJourneyState = (): JourneyState => {
       {
         id: 'initial_sms',
         type: 'sms',
-        position: { x: 400, y: 150 },
+        position: { x: 400, y: 300 },
         data: {
           label: 'Initial SMS',
           state: 'completed',
@@ -100,7 +100,7 @@ export const getInitialJourneyState = (): JourneyState => {
       {
         id: 'wait_response',
         type: 'wait',
-        position: { x: 400, y: 250 },
+        position: { x: 400, y: 500 },
         data: {
           label: 'Wait 3 Days',
           state: 'completed',
@@ -110,7 +110,7 @@ export const getInitialJourneyState = (): JourneyState => {
       {
         id: 'bundled_sms_1',
         type: 'sms',
-        position: { x: 400, y: 350 },
+        position: { x: 400, y: 700 },
         data: {
           label: 'Bundled: HbA1c + Mammogram',
           state: 'current',
@@ -125,7 +125,7 @@ export const getInitialJourneyState = (): JourneyState => {
       {
         id: 'response_check',
         type: 'response_check',
-        position: { x: 400, y: 450 },
+        position: { x: 400, y: 900 },
         data: {
           label: 'Response Check',
           state: 'scheduled',
@@ -137,7 +137,7 @@ export const getInitialJourneyState = (): JourneyState => {
       {
         id: 'end_success',
         type: 'success',
-        position: { x: 250, y: 550 },
+        position: { x: 250, y: 1100 },
         data: {
           label: 'Both Gaps Closed',
           state: 'scheduled',
@@ -147,7 +147,7 @@ export const getInitialJourneyState = (): JourneyState => {
       {
         id: 'followup_sms',
         type: 'sms',
-        position: { x: 550, y: 550 },
+        position: { x: 550, y: 1100 },
         data: {
           label: 'Follow-up SMS',
           state: 'scheduled',
