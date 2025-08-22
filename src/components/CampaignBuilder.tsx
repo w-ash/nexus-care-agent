@@ -21,6 +21,7 @@ import { Slider } from '@/components/ui/slider';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Send, Plus, ArrowLeft } from 'lucide-react';
 import TriggerNode from './nodes/TriggerNode';
 import OutreachNode from './nodes/OutreachNode';
@@ -92,6 +93,31 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
   const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
     setSelectedNode(node.id);
   }, []);
+
+  const updateNodeConfig = (nodeId: string, newConfig: any) => {
+    setNodes(prev => prev.map(node => 
+      node.id === nodeId 
+        ? { 
+            ...node, 
+            data: { 
+              ...node.data, 
+              config: { 
+                ...(typeof node.data.config === 'object' && node.data.config !== null ? node.data.config : {}), 
+                ...newConfig 
+              } 
+            } 
+          }
+        : node
+    ));
+  };
+
+  const updateNodeLabel = (nodeId: string, newLabel: string) => {
+    setNodes(prev => prev.map(node => 
+      node.id === nodeId 
+        ? { ...node, data: { ...node.data, label: newLabel } }
+        : node
+    ));
+  };
 
   const handleChatSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -453,64 +479,58 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
           </ReactFlow>
 
           {/* Node Palette */}
-          <Card className="absolute bottom-4 left-4 w-80">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Node Palette</CardTitle>
+          <Card className="absolute bottom-4 left-4 w-80 shadow-lg border-muted/20">
+            <CardHeader className="pb-3 bg-gradient-to-r from-primary/5 to-primary/10">
+              <CardTitle className="text-sm font-medium">Add Node</CardTitle>
             </CardHeader>
-            <CardContent className="pt-0">
+            <CardContent className="pt-3">
               <div className="grid grid-cols-2 gap-2">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => addNodeFromPalette('outreach')}
-                  className="h-12 flex-col gap-1 text-xs"
+                  className="h-12 flex-col gap-1 text-xs hover:bg-blue-50 hover:border-blue-200 transition-colors"
                 >
-                  <Plus className="h-4 w-4" />
                   💬 Outreach
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => addNodeFromPalette('decision')}
-                  className="h-12 flex-col gap-1 text-xs"
+                  className="h-12 flex-col gap-1 text-xs hover:bg-purple-50 hover:border-purple-200 transition-colors"
                 >
-                  <Plus className="h-4 w-4" />
                   🤔 Decision
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => addNodeFromPalette('wait')}
-                  className="h-12 flex-col gap-1 text-xs"
+                  className="h-12 flex-col gap-1 text-xs hover:bg-amber-50 hover:border-amber-200 transition-colors"
                 >
-                  <Plus className="h-4 w-4" />
                   ⏰ Wait
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => addNodeFromPalette('action')}
-                  className="h-12 flex-col gap-1 text-xs"
+                  className="h-12 flex-col gap-1 text-xs hover:bg-teal-50 hover:border-teal-200 transition-colors"
                 >
-                  <Plus className="h-4 w-4" />
                   📅 Action
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => addNodeFromPalette('knowledge')}
-                  className="h-12 flex-col gap-1 text-xs"
+                  className="h-12 flex-col gap-1 text-xs hover:bg-pink-50 hover:border-pink-200 transition-colors"
                 >
-                  <Plus className="h-4 w-4" />
                   🧠 Knowledge
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => addNodeFromPalette('end')}
-                  className="h-12 flex-col gap-1 text-xs"
+                  className="h-12 flex-col gap-1 text-xs hover:bg-gray-50 hover:border-gray-200 transition-colors"
                 >
-                  <Plus className="h-4 w-4" />
                   ✅ End
                 </Button>
               </div>
@@ -520,6 +540,153 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
 
         {/* Right Panel */}
         <div className="w-96 border-l bg-card flex flex-col">
+          {/* Node Configuration Panel */}
+          {selectedNode && (() => {
+            const node = nodes.find(n => n.id === selectedNode);
+            if (!node) return null;
+            
+            return (
+              <div className="p-4 border-b bg-muted/10">
+                <h3 className="font-medium mb-3">Configure Node</h3>
+                <div className="space-y-3">
+                  <div>
+                    <Label htmlFor="node-label">Node Label</Label>
+                    <Input
+                      id="node-label"
+                      value={typeof node.data.label === 'string' ? node.data.label : ''}
+                      onChange={(e) => updateNodeLabel(selectedNode, e.target.value)}
+                      className="mt-1"
+                    />
+                  </div>
+                  
+                  {/* Outreach Node Configuration */}
+                  {node.type === 'outreach' && (
+                    <>
+                      <div>
+                        <Label htmlFor="channel">Channel Type</Label>
+                        <Select 
+                          value={(node.data.config as any)?.channel || 'sms'}
+                          onValueChange={(value) => updateNodeConfig(selectedNode, { channel: value })}
+                        >
+                          <SelectTrigger className="mt-1">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="sms">SMS</SelectItem>
+                            <SelectItem value="phone">Phone</SelectItem>
+                            <SelectItem value="email">Email</SelectItem>
+                            <SelectItem value="mail">Direct Mail</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      {(node.data.config as any)?.channel === 'sms' && (
+                        <div>
+                          <Label htmlFor="time-of-day">Time of Day</Label>
+                          <Select 
+                            value={(node.data.config as any)?.timeOfDay || 'morning'}
+                            onValueChange={(value) => updateNodeConfig(selectedNode, { timeOfDay: value })}
+                          >
+                            <SelectTrigger className="mt-1">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="morning">Morning</SelectItem>
+                              <SelectItem value="afternoon">Afternoon</SelectItem>
+                              <SelectItem value="evening">Evening</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
+                      
+                      {(node.data.config as any)?.channel === 'phone' && (
+                        <>
+                          <div>
+                            <Label htmlFor="call-type">Call Type</Label>
+                            <Select 
+                              value={(node.data.config as any)?.callType || 'automated'}
+                              onValueChange={(value) => updateNodeConfig(selectedNode, { callType: value })}
+                            >
+                              <SelectTrigger className="mt-1">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="automated">Automated</SelectItem>
+                                <SelectItem value="live_agent">Live Agent</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label htmlFor="max-attempts">Max Attempts</Label>
+                            <Input
+                              id="max-attempts"
+                              type="number"
+                              value={(node.data.config as any)?.maxAttempts || 3}
+                              onChange={(e) => updateNodeConfig(selectedNode, { maxAttempts: parseInt(e.target.value) })}
+                              className="mt-1"
+                            />
+                          </div>
+                        </>
+                      )}
+                      
+                      <div>
+                        <Label htmlFor="template">Template</Label>
+                        <Input
+                          id="template"
+                          value={(node.data.config as any)?.template || ''}
+                          onChange={(e) => updateNodeConfig(selectedNode, { template: e.target.value })}
+                          placeholder="e.g., reminder_friendly"
+                          className="mt-1"
+                        />
+                      </div>
+                    </>
+                  )}
+                  
+                  {/* Wait Node Configuration */}
+                  {node.type === 'wait' && (
+                    <>
+                      <div>
+                        <Label htmlFor="duration">Duration</Label>
+                        <Input
+                          id="duration"
+                          type="number"
+                          value={(node.data.config as any)?.duration || 1}
+                          onChange={(e) => updateNodeConfig(selectedNode, { duration: parseInt(e.target.value) })}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="unit">Unit</Label>
+                        <Select 
+                          value={(node.data.config as any)?.unit || 'days'}
+                          onValueChange={(value) => updateNodeConfig(selectedNode, { unit: value })}
+                        >
+                          <SelectTrigger className="mt-1">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="hours">Hours</SelectItem>
+                            <SelectItem value="days">Days</SelectItem>
+                            <SelectItem value="weeks">Weeks</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </>
+                  )}
+                  
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => setSelectedNode(null)}
+                    className="w-full mt-3"
+                  >
+                    Close Configuration
+                  </Button>
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Chat Interface */}
           <div className="flex-1 flex flex-col">
             <div className="p-4 border-b">
@@ -558,7 +725,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave }) => 
 
           <Separator />
 
-          {/* Configuration Panel */}
+          {/* Campaign Configuration Panel */}
           <div className="p-4 space-y-4 bg-muted/20">
             <h3 className="font-medium">Campaign Configuration</h3>
             
