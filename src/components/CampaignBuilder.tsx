@@ -25,34 +25,69 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Send, Plus } from 'lucide-react';
 import Header from '@/components/ui/header';
-import TriggerNode from './nodes/TriggerNode';
-import OutreachNode from './nodes/OutreachNode';
-import ActionNode from './nodes/ActionNode';
-import DecisionNode from './nodes/DecisionNode';
-import WaitNode from './nodes/WaitNode';
-import KnowledgeNode from './nodes/KnowledgeNode';
-import EndNode from './nodes/EndNode';
+import { NODE_DEFINITIONS, NODE_CATEGORIES, NodeType } from '@/data/nodeDefinitions';
+import {
+  GapTriggerNode,
+  EnrollmentTriggerNode,
+  HealthEventNode,
+  SmsNode,
+  EmailNode,
+  PhoneNode,
+  MailNode,
+  AgeCheckNode,
+  ResponseCheckNode,
+  RiskCheckNode,
+  HistoryCheckNode,
+  WaitNode,
+  ScheduleTimeNode,
+  ScheduleAppointmentNode,
+  EscalateNode,
+  UpdateRecordNode,
+  AddTagNode,
+  SuccessNode,
+  IncompleteNode
+} from './nodes/SpecificNodes';
 import NodeConfigurationModal from './NodeConfigurationModal';
 import CampaignConfiguration from './CampaignConfiguration';
 
-const nodeTypes = {
-  trigger: (props: any) => <TriggerNode {...props} onEdit={() => props.data.onEdit?.(props.id)} />,
-  outreach: (props: any) => <OutreachNode {...props} onEdit={() => props.data.onEdit?.(props.id)} />,
-  action: (props: any) => <ActionNode {...props} onEdit={() => props.data.onEdit?.(props.id)} />,
-  decision: (props: any) => <DecisionNode {...props} onEdit={() => props.data.onEdit?.(props.id)} />,
-  wait: (props: any) => <WaitNode {...props} onEdit={() => props.data.onEdit?.(props.id)} />,
-  knowledge: (props: any) => <KnowledgeNode {...props} onEdit={() => props.data.onEdit?.(props.id)} />,
-  end: (props: any) => <EndNode {...props} onEdit={() => props.data.onEdit?.(props.id)} />,
-};
+// Generate nodeTypes object from NODE_DEFINITIONS
+const nodeTypes = Object.keys(NODE_DEFINITIONS).reduce((acc, nodeType) => {
+  const componentMap: any = {
+    gap_trigger: GapTriggerNode,
+    enrollment_trigger: EnrollmentTriggerNode,
+    health_event: HealthEventNode,
+    sms: SmsNode,
+    email: EmailNode,
+    phone: PhoneNode,
+    mail: MailNode,
+    age_check: AgeCheckNode,
+    response_check: ResponseCheckNode,
+    risk_check: RiskCheckNode,
+    history_check: HistoryCheckNode,
+    wait: WaitNode,
+    schedule_time: ScheduleTimeNode,
+    schedule_appointment: ScheduleAppointmentNode,
+    escalate: EscalateNode,
+    update_record: UpdateRecordNode,
+    add_tag: AddTagNode,
+    success: SuccessNode,
+    incomplete: IncompleteNode
+  };
+  
+  const Component = componentMap[nodeType];
+  if (Component) {
+    acc[nodeType] = (props: any) => <Component {...props} onEdit={() => props.data.onEdit?.(props.id)} />;
+  }
+  return acc;
+}, {} as any);
 
 const initialNodes: Node[] = [
   {
     id: 'start',
-    type: 'trigger',
+    type: 'gap_trigger',
     position: { x: 100, y: 100 },
     data: { 
       label: 'Campaign Start', 
-      category: '🎯 Triggers',
       config: {
         gapType: 'General',
         daysOverdue: 0
@@ -169,11 +204,10 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
       const workflowNodes = [
         {
           id: 'trigger_mammogram',
-          type: 'trigger',
+          type: 'gap_trigger',
           position: { x: 100, y: 200 },
           data: {
             label: 'Mammogram Overdue',
-            category: '🎯 Triggers',
             config: {
               gapType: 'Mammogram',
               daysOverdue: 365,
@@ -184,13 +218,11 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
         },
         {
           id: 'age_check',
-          type: 'decision',
+          type: 'age_check',
           position: { x: 300, y: 200 },
           data: {
             label: 'Age Group Check',
-            category: '🤔 Decisions',
             config: {
-              condition: 'age',
               branches: [
                 { operator: '<', value: 50, label: '40-49' },
                 { operator: '>=', value: 50, label: '50+' }
@@ -200,15 +232,13 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
         },
         {
           id: 'sms_education',
-          type: 'outreach',
+          type: 'sms',
           position: { x: 500, y: 100 },
           data: {
             label: 'Educational SMS',
-            category: '💬 Outreach',
             config: {
-              channel: 'sms',
               template: 'mammogram_guidelines_40s',
-              timeOfDay: 'morning'
+              timing: 'morning'
             }
           }
         },
@@ -218,32 +248,27 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
           position: { x: 700, y: 100 },
           data: {
             label: 'Wait 2 Days',
-            category: '⏰ Wait',
             config: { duration: 2, unit: 'days' }
           }
         },
         {
           id: 'sms_schedule_young',
-          type: 'outreach',
+          type: 'sms',
           position: { x: 900, y: 100 },
           data: {
             label: 'Scheduling SMS',
-            category: '💬 Outreach',
             config: {
-              channel: 'sms',
               template: 'schedule_mammogram'
             }
           }
         },
         {
           id: 'sms_schedule_older',
-          type: 'outreach',
+          type: 'sms',
           position: { x: 500, y: 300 },
           data: {
             label: 'Scheduling SMS',
-            category: '💬 Outreach',
             config: {
-              channel: 'sms',
               template: 'schedule_mammogram_urgent'
             }
           }
@@ -254,57 +279,51 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
           position: { x: 700, y: 250 },
           data: {
             label: 'Wait 5 Days',
-            category: '⏰ Wait',
             config: { duration: 5, unit: 'days' }
           }
         },
         {
           id: 'phone_followup',
-          type: 'outreach',
+          type: 'phone',
           position: { x: 900, y: 250 },
           data: {
             label: 'Phone Follow-up',
-            category: '💬 Outreach',
             config: {
-              channel: 'phone',
               callType: 'automated'
             }
           }
         },
         {
           id: 'response_check',
-          type: 'decision',
+          type: 'response_check',
           position: { x: 1100, y: 250 },
           data: {
             label: 'Response Check',
-            category: '🤔 Decisions',
             config: {
-              condition: 'response_received',
-              branches: [
-                { value: true, label: 'Responded' },
-                { value: false, label: 'No Response' }
-              ]
+              responseType: 'any',
+              waitHours: 48
             }
           }
         },
         {
           id: 'end_success',
-          type: 'end',
+          type: 'success',
           position: { x: 1300, y: 200 },
           data: {
             label: 'Campaign Complete',
-            category: '✅ End',
-            config: { outcome: 'success' }
+            config: { outcome: 'appointment_scheduled' }
           }
         },
         {
           id: 'end_incomplete',
-          type: 'end',
+          type: 'incomplete',
           position: { x: 1300, y: 350 },
           data: {
             label: 'Max Attempts',
-            category: '✅ End',
-            config: { outcome: 'incomplete' }
+            config: { 
+              reason: 'max_attempts',
+              followUpAction: 'retry_next_quarter'
+            }
           }
         }
       ];
@@ -333,44 +352,38 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
       const riskNodes = [
         {
           id: `knowledge_risk_${Date.now()}`,
-          type: 'knowledge',
+          type: 'history_check',
           position: { x: 50, y: 350 },
           data: {
             label: 'Check Family History',
-            category: '🧠 Knowledge',
             config: {
-              dataSource: 'health_data_engine',
-              check: 'breast_cancer_family_history'
+              checkType: 'family_history',
+              lookback: 'all_time'
             }
           }
         },
         {
           id: `risk_check_${Date.now()}`,
-          type: 'decision',
+          type: 'risk_check',
           position: { x: 200, y: 350 },
           data: {
             label: 'Risk Assessment',
-            category: '🤔 Decisions',
             config: {
-              condition: 'family_history',
-              branches: [
-                { value: 'high_risk', label: 'High Risk' },
-                { value: 'normal', label: 'Normal Risk' }
-              ]
+              riskModel: 'Clinical',
+              branches: ['high', 'medium', 'low']
             }
           }
         },
         {
           id: `phone_urgent_${Date.now()}`,
-          type: 'outreach',
+          type: 'phone',
           position: { x: 400, y: 450 },
           data: {
             label: 'Urgent Phone Call',
-            category: '💬 Outreach',
             config: {
-              channel: 'phone',
               callType: 'live_agent',
-              priority: 'high'
+              maxAttempts: 3,
+              leaveVoicemail: false
             }
           }
         }
@@ -393,7 +406,7 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
     setChatInput('');
   };
 
-  const addNodeFromPalette = (nodeType: string) => {
+  const addNodeFromPalette = (nodeType: NodeType) => {
     const newNode: Node = {
       id: `${nodeType}-${Date.now()}`,
       type: nodeType,
@@ -403,53 +416,30 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
     setNodes(prev => [...prev, newNode]);
   };
 
-  const getDefaultNodeData = (nodeType: string) => {
-    switch (nodeType) {
-      case 'outreach':
-        return { 
-          label: 'Send Message', 
-          category: '💬 Outreach',
-          config: { channel: 'sms', template: 'default_reminder' }
-        };
-      case 'action':
-        return { 
-          label: 'Schedule Appointment', 
-          category: '📅 Actions',
-          config: { appointmentType: 'general', schedulingMethod: 'auto' }
-        };
-      case 'decision':
-        return { 
-          label: 'Check Condition', 
-          category: '🤔 Decisions',
-          config: { 
-            condition: 'age', 
-            branches: [
-              { operator: '>=', value: 50, label: 'Over 50' },
-              { operator: '<', value: 50, label: 'Under 50' }
-            ]
-          }
-        };
-      case 'wait':
-        return { 
-          label: 'Wait Period', 
-          category: '⏰ Wait',
-          config: { duration: 3, unit: 'days' }
-        };
-      case 'knowledge':
-        return {
-          label: 'Check Data',
-          category: '🧠 Knowledge',
-          config: { dataSource: 'health_data_engine', check: 'previous_screening' }
-        };
-      case 'end':
-        return {
-          label: 'End Campaign',
-          category: '✅ End',
-          config: { outcome: 'success' }
-        };
-      default:
-        return { label: 'New Node', category: '🎯 Triggers' };
+  const getDefaultNodeData = (nodeType: NodeType) => {
+    const definition = NODE_DEFINITIONS[nodeType];
+    if (!definition) {
+      return { label: 'New Node', config: {} };
     }
+    
+    // Create default config based on schema
+    const defaultConfig: any = {};
+    Object.entries(definition.configSchema).forEach(([key, schema]: [string, any]) => {
+      if ('default' in schema) {
+        defaultConfig[key] = schema.default;
+      } else if (schema.type === 'select' && schema.options) {
+        defaultConfig[key] = schema.options[0];
+      } else if (schema.type === 'boolean') {
+        defaultConfig[key] = false;
+      } else if (schema.type === 'number') {
+        defaultConfig[key] = 1;
+      }
+    });
+    
+    return {
+      label: definition.defaultLabel,
+      config: defaultConfig
+    };
   };
 
   const handleDeploy = () => {
@@ -536,76 +526,33 @@ const CampaignBuilder: React.FC<CampaignBuilderProps> = ({ onBack, onSave, onNav
                 <CardHeader className="pb-3 bg-gradient-to-r from-primary/5 to-primary/10">
                   <CardTitle className="text-sm font-medium">Add Node</CardTitle>
                 </CardHeader>
-                <CardContent className="pt-3">
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        addNodeFromPalette('outreach');
-                        setIsPaletteOpen(false);
-                      }}
-                      className="h-12 flex-col gap-1 text-xs hover:bg-blue-50 hover:border-blue-200 transition-colors"
-                    >
-                      💬 Outreach
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        addNodeFromPalette('decision');
-                        setIsPaletteOpen(false);
-                      }}
-                      className="h-12 flex-col gap-1 text-xs hover:bg-purple-50 hover:border-purple-200 transition-colors"
-                    >
-                      🤔 Decision
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        addNodeFromPalette('wait');
-                        setIsPaletteOpen(false);
-                      }}
-                      className="h-12 flex-col gap-1 text-xs hover:bg-amber-50 hover:border-amber-200 transition-colors"
-                    >
-                      ⏰ Wait
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        addNodeFromPalette('action');
-                        setIsPaletteOpen(false);
-                      }}
-                      className="h-12 flex-col gap-1 text-xs hover:bg-teal-50 hover:border-teal-200 transition-colors"
-                    >
-                      📅 Action
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        addNodeFromPalette('knowledge');
-                        setIsPaletteOpen(false);
-                      }}
-                      className="h-12 flex-col gap-1 text-xs hover:bg-pink-50 hover:border-pink-200 transition-colors"
-                    >
-                      🧠 Knowledge
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        addNodeFromPalette('end');
-                        setIsPaletteOpen(false);
-                      }}
-                      className="h-12 flex-col gap-1 text-xs hover:bg-gray-50 hover:border-gray-200 transition-colors"
-                    >
-                      ✅ End
-                    </Button>
-                  </div>
-                </CardContent>
+                 <CardContent className="pt-3">
+                   <div className="space-y-3">
+                     {Object.entries(NODE_CATEGORIES).map(([category, nodes]) => (
+                       <div key={category}>
+                         <h4 className="text-xs font-medium text-muted-foreground mb-2">{category}</h4>
+                         <div className="grid grid-cols-2 gap-1">
+                           {nodes.map((node) => (
+                             <Button
+                               key={node.type}
+                               variant="outline"
+                               size="sm"
+                                onClick={() => {
+                                  addNodeFromPalette(node.type as NodeType);
+                                  setIsPaletteOpen(false);
+                                }}
+                               className="h-10 flex-col gap-0.5 text-xs hover:bg-primary/5 hover:border-primary/20 transition-colors"
+                               title={node.description}
+                             >
+                               <span className="text-sm">{node.emoji}</span>
+                               <span className="truncate text-xs">{node.label.split(' ')[0]}</span>
+                             </Button>
+                           ))}
+                         </div>
+                       </div>
+                     ))}
+                   </div>
+                 </CardContent>
               </Card>
             </>
           )}
